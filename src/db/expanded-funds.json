@@ -1,0 +1,266 @@
+[
+  {
+    "amfiCode": "UTIMF001",
+    "name": "UTI Nifty 50 Index Fund",
+    "type": "EQUITY",
+    "category": "LARGE_CAP",
+    "benchmark": "Nifty 50",
+    "expenseRatio": 0.12,
+    "description": "Passive fund tracking Nifty 50 index with minimal tracking error",
+    "inceptionDate": "2000-01-01T00:00:00.000Z",
+    "fundManager": "Sharwan Kumar Goyal",
+    "fundManagerExperience": 15,
+    "fundsManaged": 8,
+    "managerQualifications": [
+      "MBA - IIM Bangalore",
+      "CFA Charter",
+      "B.Tech - IIT Delhi"
+    ],
+    "investmentPhilosophy": "Passive replication of Nifty 50 constituents with quarterly rebalancing",
+    "pros": [
+      "Lowest expense ratio in category at 0.12%",
+      "Perfect tracking of Nifty 50 with minimal error",
+      "Highly liquid with strong AUM base",
+      "Ideal for long-term wealth creation",
+      "Tax-efficient for equity taxation benefits"
+    ],
+    "cons": [
+      "No potential to outperform benchmark",
+      "No active risk management during market downturns",
+      "Concentrated in large caps only",
+      "Subject to full market volatility"
+    ],
+    "sectorAllocation": {
+      "Financial Services": 32.5,
+      "Information Technology": 18.2,
+      "Energy": 11.8,
+      "Consumer Goods": 10.5,
+      "Automobile": 7.3,
+      "Healthcare": 6.2,
+      "Metals": 5.8,
+      "Telecom": 4.2,
+      "Others": 3.5
+    },
+    "topHoldings": [
+      { "name": "Reliance Industries", "percentage": 9.8 },
+      { "name": "HDFC Bank", "percentage": 8.5 },
+      { "name": "ICICI Bank", "percentage": 7.2 },
+      { "name": "Infosys", "percentage": 6.1 },
+      { "name": "TCS", "percentage": 5.9 }
+    ],
+    "riskMetrics": {
+      "sharpeRatio": 1.15,
+      "beta": 1.0,
+      "alpha": -0.05,
+      "standardDeviation": 18.5
+    }
+  },
+  {
+    "amfiCode": "MOTILAL001",
+    "name": "Motilal Oswal Midcap Fund",
+    "type": "EQUITY",
+    "category": "MID_CAP",
+    "benchmark": "Nifty Midcap 150",
+    "expenseRatio": 0.75,
+    "description": "High conviction mid cap fund with concentrated portfolio approach",
+    "inceptionDate": "2014-02-04T00:00:00.000Z",
+    "fundManager": "Ajay Khandelwal",
+    "fundManagerExperience": 18,
+    "fundsManaged": 5,
+    "managerQualifications": ["CFA", "MBA - Finance", "CA"],
+    "investmentPhilosophy": "Focused portfolio of 25-30 high-quality mid-caps with strong competitive advantages",
+    "pros": [
+      "Exceptional 5-year CAGR of 22.5%",
+      "Concentrated portfolio of best ideas",
+      "Strong research-driven stock selection",
+      "Proven track record across market cycles",
+      "Low expense ratio for active mid-cap fund"
+    ],
+    "cons": [
+      "Higher volatility due to mid-cap exposure",
+      "Concentrated portfolio increases risk",
+      "Not suitable for risk-averse investors",
+      "Exit load of 1% if redeemed within 1 year"
+    ],
+    "sectorAllocation": {
+      "Financial Services": 22.3,
+      "Consumer Discretionary": 18.5,
+      "Industrials": 15.8,
+      "Healthcare": 12.4,
+      "Information Technology": 11.2,
+      "Materials": 9.8,
+      "Consumer Staples": 6.5,
+      "Others": 3.5
+    },
+    "topHoldings": [
+      { "name": "Cholamandalam Investment", "percentage": 5.8 },
+      { "name": "Dixon Technologies", "percentage": 5.2 },
+      { "name": "Zomato", "percentage": 4.9 },
+      { "name": "Max Healthcare", "percentage": 4.5 },
+      { "name": "Polycab India", "percentage": 4.2 }
+    ],
+    "riskMetrics": {
+      "sharpeRatio": 1.42,
+      "beta": 1.15,
+      "alpha": 4.2,
+      "standardDeviation": 22.8
+    }
+  },
+  {
+    "amfiCode": "QUANT001",
+    "name": "Quant Small Cap Fund",
+    "type": "EQUITY",
+    "category": "SMALL_CAP",
+    "benchmark": "Nifty Smallcap 250",
+    "expenseRatio": 0.72,
+    "description": "Aggressive small cap fund with multi-cap flexibility for high growth",
+    "inceptionDate": "2019-11-01T00:00:00.000Z",
+    "fundManager": "Sanjeev Sharma",
+    "fundManagerExperience": 22,
+    "fundsManaged": 12,
+    "managerQualifications": [
+      "MBA - Finance",
+      "B.Com",
+      "20+ years equity research"
+    ],
+    "investmentPhilosophy": "Bottom-up stock picking in emerging businesses with strong unit economics",
+    "pros": [
+      "Outstanding 3-year CAGR of 35%",
+      "Flexibility to invest across market caps",
+      "Experienced fund manager with proven track record",
+      "Access to hidden gems in small-cap space",
+      "Strong risk-adjusted returns"
+    ],
+    "cons": [
+      "Very high volatility - not for beginners",
+      "Limited liquidity in portfolio stocks",
+      "Higher downside risk in bear markets",
+      "Requires 5+ year investment horizon"
+    ],
+    "sectorAllocation": {
+      "Industrials": 25.2,
+      "Consumer Discretionary": 18.8,
+      "Financial Services": 15.5,
+      "Materials": 12.3,
+      "Healthcare": 10.5,
+      "Information Technology": 8.2,
+      "Real Estate": 5.5,
+      "Others": 4.0
+    },
+    "topHoldings": [
+      { "name": "Kalyan Jewellers", "percentage": 3.8 },
+      { "name": "RVNL", "percentage": 3.5 },
+      { "name": "Suzlon Energy", "percentage": 3.2 },
+      { "name": "IRFC", "percentage": 3.0 },
+      { "name": "PNB Housing Finance", "percentage": 2.9 }
+    ],
+    "riskMetrics": {
+      "sharpeRatio": 1.58,
+      "beta": 1.35,
+      "alpha": 8.5,
+      "standardDeviation": 28.5
+    }
+  },
+  {
+    "amfiCode": "HDFC004",
+    "name": "HDFC Flexi Cap Fund",
+    "type": "EQUITY",
+    "category": "MULTI_CAP",
+    "benchmark": "Nifty 500",
+    "expenseRatio": 0.78,
+    "description": "Flexible allocation fund investing across market capitalizations",
+    "inceptionDate": "1995-01-01T00:00:00.000Z",
+    "fundManager": "Prashant Jain (till 2022), Roshi Jain (current)",
+    "fundManagerExperience": 25,
+    "fundsManaged": 6,
+    "managerQualifications": ["MBA - Finance", "CFA", "B.Com"],
+    "investmentPhilosophy": "Contrarian value investing with long-term horizon across market caps",
+    "pros": [
+      "One of India's oldest and largest equity funds",
+      "Flexibility to shift between large, mid, small caps",
+      "Consistent long-term wealth creator (20+ years)",
+      "Strong downside protection in bear markets",
+      "Suitable for core portfolio holding"
+    ],
+    "cons": [
+      "Recent underperformance post fund manager change",
+      "Contrarian approach may lag in momentum markets",
+      "Large AUM may impact agility",
+      "Higher expense ratio for passive investors"
+    ],
+    "sectorAllocation": {
+      "Financial Services": 28.5,
+      "Information Technology": 16.2,
+      "Consumer Goods": 13.8,
+      "Healthcare": 11.5,
+      "Industrials": 10.2,
+      "Energy": 8.5,
+      "Automobile": 6.3,
+      "Others": 5.0
+    },
+    "topHoldings": [
+      { "name": "HDFC Bank", "percentage": 7.2 },
+      { "name": "ICICI Bank", "percentage": 6.5 },
+      { "name": "Infosys", "percentage": 5.8 },
+      { "name": "Reliance Industries", "percentage": 5.2 },
+      { "name": "Bharti Airtel", "percentage": 4.5 }
+    ],
+    "riskMetrics": {
+      "sharpeRatio": 0.98,
+      "beta": 0.92,
+      "alpha": 1.2,
+      "standardDeviation": 19.5
+    }
+  },
+  {
+    "amfiCode": "AXIS005",
+    "name": "Axis ELSS Tax Saver Fund",
+    "type": "EQUITY",
+    "category": "ELSS",
+    "benchmark": "Nifty 500",
+    "expenseRatio": 0.68,
+    "description": "Tax-saving equity fund with 3-year lock-in period under Section 80C",
+    "inceptionDate": "2009-01-29T00:00:00.000Z",
+    "fundManager": "Shreyash Devalkar",
+    "fundManagerExperience": 12,
+    "fundsManaged": 4,
+    "managerQualifications": ["MBA - Finance", "CA", "CFA Level 2"],
+    "investmentPhilosophy": "Quality growth investing with multi-cap flexibility",
+    "pros": [
+      "Tax deduction up to ₹1.5 lakh under 80C",
+      "Shortest lock-in period among tax-saving options",
+      "Excellent 10-year CAGR of 18.5%",
+      "Low expense ratio compared to category",
+      "Flexibility across market caps"
+    ],
+    "cons": [
+      "Mandatory 3-year lock-in period",
+      "Cannot be used for short-term goals",
+      "Market volatility affects returns",
+      "Tax benefits limited to old tax regime"
+    ],
+    "sectorAllocation": {
+      "Financial Services": 26.8,
+      "Information Technology": 18.5,
+      "Consumer Goods": 14.2,
+      "Healthcare": 12.5,
+      "Industrials": 9.8,
+      "Automobile": 7.5,
+      "Energy": 6.2,
+      "Others": 4.5
+    },
+    "topHoldings": [
+      { "name": "HDFC Bank", "percentage": 6.8 },
+      { "name": "ICICI Bank", "percentage": 5.9 },
+      { "name": "Infosys", "percentage": 5.5 },
+      { "name": "TCS", "percentage": 4.8 },
+      { "name": "Reliance Industries", "percentage": 4.5 }
+    ],
+    "riskMetrics": {
+      "sharpeRatio": 1.28,
+      "beta": 1.02,
+      "alpha": 2.8,
+      "standardDeviation": 20.2
+    }
+  }
+]

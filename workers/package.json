@@ -1,0 +1,21 @@
+{
+  "name": "mf-ingestion-workers",
+  "version": "1.0.0",
+  "description": "24/7 fund ingestion and NAV update workers for Oracle VM",
+  "main": "missing-fund-worker.js",
+  "scripts": {
+    "start": "pm2 start ecosystem.config.json",
+    "stop": "pm2 stop all",
+    "restart": "pm2 restart all",
+    "logs": "pm2 logs",
+    "status": "pm2 status",
+    "monit": "pm2 monit"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "mongodb": "^6.0.0",
+    "dotenv": "^16.0.0"
+  },
+  "author": "",
+  "license": "MIT"
+}

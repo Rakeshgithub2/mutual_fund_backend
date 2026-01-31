@@ -1,0 +1,19 @@
+[
+  {
+    "fundName": "SBI Bluechip Fund - Direct Growth",
+    "category": "Equity",
+    "subCategory": "Large Cap",
+    "holdings": [
+      { "name": "HDFC Bank Ltd", "weight": 7.22 },
+      { "name": "ICICI Bank Ltd", "weight": 6.97 },
+      { "name": "Reliance Industries Ltd", "weight": 6.89 },
+      { "name": "Larsen & Toubro Ltd", "weight": 5.41 },
+      { "name": "Asian Paints Ltd", "weight": 4.11 },
+      { "name": "Infosys Ltd", "weight": 3.88 },
+      { "name": "Kotak Mahindra Bank Ltd", "weight": 3.62 },
+      { "name": "State Bank of India", "weight": 3.36 },
+      { "name": "Divi's Laboratories Ltd", "weight": 3.13 },
+      { "name": "Axis Bank Ltd", "weight": 3.12 }
+    ]
+  }
+]

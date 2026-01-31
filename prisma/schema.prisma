@@ -1,0 +1,315 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  password  String
+  name      String
+  age       Int?
+  riskLevel String?  // LOW, MEDIUM, HIGH
+  role      String   @default("USER") // USER, ADMIN
+  isVerified Boolean @default(false)
+  kycStatus String   @default("PENDING") // PENDING, SUBMITTED, APPROVED, REJECTED
+  
+  // OAuth fields
+  googleId  String?  @unique
+  provider  String?  @default("local") // local, google
+  profilePicture String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  watchlists WatchlistItem[]
+  alerts     Alert[]
+  portfolios Portfolio[]
+  refreshTokens RefreshToken[]
+  investments Investment[]
+  transactions Transaction[]
+  kyc        KYC?
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  token     String   @unique
+  userId    String   @db.ObjectId
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+}
+
+model Fund {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  amfiCode      String?   @unique
+  name          String
+  type          String?   // EQUITY, DEBT, HYBRID, etc.
+  category      String?   // EQUITY, DEBT, HYBRID, etc. (main category)
+  subCategory   String?   // largecap, midcap, smallcap, etc. (detailed classification)
+  benchmark     String?
+  expenseRatio  Float?
+  inceptionDate DateTime?
+  description   String?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  performances  FundPerformance[]
+  holdings      Holding[]
+  managedBy     FundManager[]
+  watchlistItems WatchlistItem[]
+  alerts        Alert[]
+  portfolioItems PortfolioItem[]
+
+  @@map("funds")
+}
+
+model FundPerformance {
+  id     String   @id @default(auto()) @map("_id") @db.ObjectId
+  fundId String   @db.ObjectId
+  date   DateTime
+  nav    Float
+  createdAt DateTime @default(now())
+
+  fund Fund @relation(fields: [fundId], references: [id], onDelete: Cascade)
+
+  @@unique([fundId, date])
+  @@map("fund_performances")
+}
+
+model Holding {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  fundId  String @db.ObjectId
+  ticker  String
+  name    String
+  percent Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  fund Fund @relation(fields: [fundId], references: [id], onDelete: Cascade)
+
+  @@map("holdings")
+}
+
+model FundManager {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  experience  Int?   // years of experience
+  qualification String?
+  fundId      String @db.ObjectId
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  fund Fund @relation(fields: [fundId], references: [id], onDelete: Cascade)
+
+  @@map("fund_managers")
+}
+
+model WatchlistItem {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  fundId String @db.ObjectId
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fund Fund @relation(fields: [fundId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, fundId])
+  @@map("watchlist_items")
+}
+
+model Alert {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  fundId    String?  @db.ObjectId
+  type      String   // NAV_THRESHOLD, PRICE_CHANGE, NEWS
+  condition String   // JSON string with alert conditions
+  isActive  Boolean  @default(true)
+  lastTriggered DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fund Fund? @relation(fields: [fundId], references: [id], onDelete: Cascade)
+
+  @@map("alerts")
+}
+
+model News {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  content   String
+  source    String?
+  category  String?  // MARKET, FUND_SPECIFIC, REGULATORY
+  tags      String[] // Array of tags
+  publishedAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("news")
+}
+
+model Portfolio {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String @db.ObjectId
+  name      String
+  totalValue Float @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items PortfolioItem[]
+
+  @@map("portfolios")
+}
+
+model PortfolioItem {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  portfolioId String @db.ObjectId
+  fundId      String @db.ObjectId
+  units       Float
+  investedAmount Float
+  currentValue Float @default(0)
+  investedAt  DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  portfolio Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  fund      Fund @relation(fields: [fundId], references: [id], onDelete: Cascade)
+
+  @@map("portfolio_items")
+}
+
+model Investment {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  fundId      String   @db.ObjectId
+  type        String   // LUMPSUM, SIP
+  amount      Float
+  units       Float?
+  nav         Float
+  status      String   @default("PENDING") // PENDING, COMPLETED, FAILED, CANCELLED
+  paymentMethod String // UPI, NETBANKING, DEBIT, WALLET, AUTOPAY
+  sipDate     Int?     // Date of month for SIP (1-28)
+  sipFrequency String? // WEEKLY, MONTHLY, QUARTERLY
+  transactionId String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("investments")
+}
+
+model Transaction {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  fundId      String?  @db.ObjectId
+  type        String   // INVESTMENT, REDEMPTION, DIVIDEND, SIP
+  amount      Float
+  units       Float?
+  nav         Float?
+  status      String   // SUCCESS, FAILED, PENDING
+  description String?
+  referenceId String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("transactions")
+}
+
+model KYC {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String   @unique @db.ObjectId
+  fullName      String
+  dateOfBirth   String
+  panNumber     String   @unique
+  email         String
+  phone         String
+  address       String
+  city          String
+  state         String
+  pincode       String
+  bankName      String
+  accountNumber String
+  ifscCode      String
+  panFileUrl    String?
+  aadhaarFileUrl String?
+  bankProofUrl  String?
+  status        String   @default("SUBMITTED") // SUBMITTED, UNDER_REVIEW, APPROVED, REJECTED
+  rejectionReason String?
+  submittedAt   DateTime @default(now())
+  reviewedAt    DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("kyc")
+}
+
+model Cache {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  key       String   @unique
+  value     String
+  expiresAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("cache")
+}
+
+model KnowledgeBase {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  questionId Int     @unique
+  question  String
+  keywords  String[]
+  definition String
+  points    String[]
+  category  String
+  level     String   // beginner, intermediate, advanced
+  relatedQuestions Int[]
+  formula   String?
+  
+  // For similarity search
+  searchableText String  // Combined text for matching
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+  @@index([level])
+  @@map("knowledge_base")
+}
+
+model ChatHistory {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String?  @db.ObjectId
+  sessionId String
+  question  String
+  answer    String
+  matchedQuestionId Int?
+  similarity Float?
+  calculationType String?
+  createdAt DateTime @default(now())
+
+  @@index([sessionId])
+  @@index([userId])
+  @@map("chat_history")
+}

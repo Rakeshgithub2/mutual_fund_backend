@@ -1,0 +1,172 @@
+[
+  {
+    "fundName": "SBI Blue Chip Fund - Direct Plan - Growth",
+    "category": "Equity",
+    "subCategory": "Large Cap",
+    "holdings": [
+      { "name": "HDFC Bank Ltd", "weight": 9.87 },
+      { "name": "ICICI Bank Ltd", "weight": 8.45 },
+      { "name": "Reliance Industries Ltd", "weight": 7.92 },
+      { "name": "Infosys Ltd", "weight": 6.78 },
+      { "name": "Larsen & Toubro Ltd", "weight": 5.43 },
+      { "name": "Bharti Airtel Ltd", "weight": 4.89 },
+      { "name": "TCS Ltd", "weight": 4.56 },
+      { "name": "Axis Bank Ltd", "weight": 4.12 },
+      { "name": "ITC Ltd", "weight": 3.89 },
+      { "name": "State Bank of India", "weight": 3.67 }
+    ]
+  },
+  {
+    "fundName": "HDFC Mid-Cap Opportunities Fund - Direct Plan - Growth",
+    "category": "Equity",
+    "subCategory": "Mid Cap",
+    "holdings": [
+      { "name": "Indian Hotels Company Ltd", "weight": 4.21 },
+      { "name": "Max Healthcare Institute Ltd", "weight": 3.87 },
+      { "name": "Coforge Ltd", "weight": 3.65 },
+      { "name": "Persistent Systems Ltd", "weight": 3.42 },
+      { "name": "AU Small Finance Bank Ltd", "weight": 3.18 },
+      { "name": "Oberoi Realty Ltd", "weight": 2.98 },
+      { "name": "Voltas Ltd", "weight": 2.87 },
+      { "name": "Sundaram Finance Ltd", "weight": 2.76 },
+      { "name": "The Phoenix Mills Ltd", "weight": 2.65 },
+      { "name": "Tube Investments of India Ltd", "weight": 2.54 }
+    ]
+  },
+  {
+    "fundName": "Nippon India Small Cap Fund - Direct Plan - Growth",
+    "category": "Equity",
+    "subCategory": "Small Cap",
+    "holdings": [
+      { "name": "KPIT Technologies Ltd", "weight": 2.89 },
+      { "name": "Kaynes Technology India Ltd", "weight": 2.67 },
+      { "name": "Multi Commodity Exchange of India Ltd", "weight": 2.45 },
+      { "name": "Apar Industries Ltd", "weight": 2.34 },
+      { "name": "Karur Vysya Bank Ltd", "weight": 2.21 },
+      { "name": "Ratnamani Metals & Tubes Ltd", "weight": 2.18 },
+      { "name": "Data Patterns India Ltd", "weight": 2.09 },
+      { "name": "Equitas Small Finance Bank Ltd", "weight": 1.98 },
+      { "name": "Safari Industries India Ltd", "weight": 1.87 },
+      { "name": "IIFL Finance Ltd", "weight": 1.76 }
+    ]
+  },
+  {
+    "fundName": "Parag Parikh Flexi Cap Fund - Direct Plan - Growth",
+    "category": "Equity",
+    "subCategory": "Flexi Cap",
+    "holdings": [
+      { "name": "HDFC Bank Ltd", "weight": 8.45 },
+      { "name": "Bajaj Holdings & Investment Ltd", "weight": 6.78 },
+      { "name": "ICICI Bank Ltd", "weight": 5.92 },
+      { "name": "Power Grid Corporation of India Ltd", "weight": 4.67 },
+      { "name": "Coal India Ltd", "weight": 4.23 },
+      { "name": "ITC Ltd", "weight": 3.89 },
+      { "name": "Maruti Suzuki India Ltd", "weight": 3.56 },
+      { "name": "HCL Technologies Ltd", "weight": 3.21 },
+      { "name": "Axis Bank Ltd", "weight": 2.98 },
+      { "name": "Tech Mahindra Ltd", "weight": 2.76 }
+    ]
+  },
+  {
+    "fundName": "Mirae Asset Large Cap Fund - Direct Plan - Growth",
+    "category": "Equity",
+    "subCategory": "Large Cap",
+    "holdings": [
+      { "name": "HDFC Bank Ltd", "weight": 9.12 },
+      { "name": "ICICI Bank Ltd", "weight": 8.67 },
+      { "name": "Reliance Industries Ltd", "weight": 7.89 },
+      { "name": "Infosys Ltd", "weight": 6.54 },
+      { "name": "Larsen & Toubro Ltd", "weight": 5.78 },
+      { "name": "Bharti Airtel Ltd", "weight": 5.12 },
+      { "name": "TCS Ltd", "weight": 4.89 },
+      { "name": "Axis Bank Ltd", "weight": 4.34 },
+      { "name": "Kotak Mahindra Bank Ltd", "weight": 3.98 },
+      { "name": "State Bank of India", "weight": 3.67 }
+    ]
+  },
+  {
+    "fundName": "Axis Bluechip Fund - Direct Plan - Growth",
+    "category": "Equity",
+    "subCategory": "Large Cap",
+    "holdings": [
+      { "name": "HDFC Bank Ltd", "weight": 9.45 },
+      { "name": "ICICI Bank Ltd", "weight": 8.23 },
+      { "name": "Reliance Industries Ltd", "weight": 7.12 },
+      { "name": "Bajaj Finance Ltd", "weight": 5.89 },
+      { "name": "Infosys Ltd", "weight": 5.67 },
+      { "name": "TCS Ltd", "weight": 5.34 },
+      { "name": "Kotak Mahindra Bank Ltd", "weight": 4.78 },
+      { "name": "Avenue Supermarts Ltd", "weight": 4.12 },
+      { "name": "Titan Company Ltd", "weight": 3.89 },
+      { "name": "Asian Paints Ltd", "weight": 3.56 }
+    ]
+  },
+  {
+    "fundName": "ICICI Prudential Bluechip Fund - Direct Plan - Growth",
+    "category": "Equity",
+    "subCategory": "Large Cap",
+    "holdings": [
+      { "name": "HDFC Bank Ltd", "weight": 9.78 },
+      { "name": "ICICI Bank Ltd", "weight": 8.92 },
+      { "name": "Reliance Industries Ltd", "weight": 8.12 },
+      { "name": "Infosys Ltd", "weight": 6.89 },
+      { "name": "Larsen & Toubro Ltd", "weight": 5.67 },
+      { "name": "TCS Ltd", "weight": 5.23 },
+      { "name": "Axis Bank Ltd", "weight": 4.56 },
+      { "name": "Bharti Airtel Ltd", "weight": 4.12 },
+      { "name": "ITC Ltd", "weight": 3.89 },
+      { "name": "Sun Pharmaceutical Industries Ltd", "weight": 3.45 }
+    ]
+  },
+  {
+    "fundName": "Quant Small Cap Fund - Direct Plan - Growth",
+    "category": "Equity",
+    "subCategory": "Small Cap",
+    "holdings": [
+      { "name": "Reliance Industries Ltd", "weight": 8.45 },
+      { "name": "IRB Infrastructure Developers Ltd", "weight": 5.67 },
+      { "name": "Bikaji Foods International Ltd", "weight": 4.89 },
+      { "name": "JIO Financial Services Ltd", "weight": 4.56 },
+      { "name": "Samvardhana Motherson International Ltd", "weight": 4.12 },
+      { "name": "PCBL Ltd", "weight": 3.78 },
+      { "name": "Steel Authority of India Ltd", "weight": 3.45 },
+      { "name": "Aegis Logistics Ltd", "weight": 3.21 },
+      { "name": "Laurus Labs Ltd", "weight": 2.98 },
+      { "name": "Aurobindo Pharma Ltd", "weight": 2.76 }
+    ]
+  },
+  {
+    "fundName": "Kotak Emerging Equity Fund - Direct Plan - Growth",
+    "category": "Equity",
+    "subCategory": "Mid Cap",
+    "holdings": [
+      { "name": "Persistent Systems Ltd", "weight": 4.12 },
+      { "name": "Coforge Ltd", "weight": 3.89 },
+      { "name": "Supreme Industries Ltd", "weight": 3.56 },
+      { "name": "Oberoi Realty Ltd", "weight": 3.34 },
+      { "name": "The Phoenix Mills Ltd", "weight": 3.12 },
+      { "name": "Sundram Fasteners Ltd", "weight": 2.89 },
+      { "name": "Schaeffler India Ltd", "weight": 2.67 },
+      { "name": "CG Power and Industrial Solutions Ltd", "weight": 2.56 },
+      { "name": "Crompton Greaves Consumer Electricals Ltd", "weight": 2.34 },
+      { "name": "Cummins India Ltd", "weight": 2.23 }
+    ]
+  },
+  {
+    "fundName": "SBI Contra Fund - Direct Plan - Growth",
+    "category": "Equity",
+    "subCategory": "Contra",
+    "holdings": [
+      { "name": "HDFC Bank Ltd", "weight": 6.78 },
+      { "name": "ICICI Bank Ltd", "weight": 5.89 },
+      { "name": "Reliance Industries Ltd", "weight": 5.45 },
+      { "name": "GAIL India Ltd", "weight": 4.89 },
+      { "name": "NTPC Ltd", "weight": 4.56 },
+      { "name": "Oil & Natural Gas Corporation Ltd", "weight": 4.12 },
+      { "name": "Coal India Ltd", "weight": 3.89 },
+      { "name": "Power Grid Corporation of India Ltd", "weight": 3.67 },
+      { "name": "State Bank of India", "weight": 3.45 },
+      { "name": "Bharat Petroleum Corporation Ltd", "weight": 3.12 }
+    ]
+  }
+]

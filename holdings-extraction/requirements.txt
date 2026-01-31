@@ -1,0 +1,9 @@
+# Holdings Extraction System Dependencies
+requests==2.31.0
+beautifulsoup4==4.12.2
+tabula-py==2.8.2
+pandas==2.1.4
+pymongo==4.6.1
+python-dotenv==1.0.0
+schedule==1.2.0
+lxml==5.0.0

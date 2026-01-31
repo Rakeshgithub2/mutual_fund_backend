@@ -1,0 +1,41 @@
+{
+  "apps": [
+    {
+      "name": "mf-ingestor",
+      "script": "./missing-fund-worker.js",
+      "cwd": "/home/ubuntu/mf-workers",
+      "instances": 1,
+      "autorestart": true,
+      "watch": false,
+      "max_memory_restart": "500M",
+      "env": {
+        "NODE_ENV": "production",
+        "DATABASE_URL": "mongodb+srv://user:pass@cluster.mongodb.net/mutual_funds_db"
+      },
+      "error_file": "/home/ubuntu/logs/mf-ingestor-error.log",
+      "out_file": "/home/ubuntu/logs/mf-ingestor-out.log",
+      "log_date_format": "YYYY-MM-DD HH:mm:ss Z",
+      "merge_logs": true,
+      "min_uptime": "10s",
+      "max_restarts": 10,
+      "restart_delay": 4000
+    },
+    {
+      "name": "nav-updater",
+      "script": "./nav-updater-worker.js",
+      "cwd": "/home/ubuntu/mf-workers",
+      "instances": 1,
+      "autorestart": true,
+      "watch": false,
+      "max_memory_restart": "500M",
+      "cron_restart": "0 20 * * *",
+      "env": {
+        "NODE_ENV": "production",
+        "DATABASE_URL": "mongodb+srv://user:pass@cluster.mongodb.net/mutual_funds_db"
+      },
+      "error_file": "/home/ubuntu/logs/nav-updater-error.log",
+      "out_file": "/home/ubuntu/logs/nav-updater-out.log",
+      "log_date_format": "YYYY-MM-DD HH:mm:ss Z"
+    }
+  ]
+}
