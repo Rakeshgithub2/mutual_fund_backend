@@ -346,20 +346,13 @@ export class FundModel {
       query['dataCompleteness.completenessScore'] = { $gte: 60 };
     }
 
-    const sort: any = {};
-
-    if (options.sortBy === 'returns') {
-      sort['returns.oneYear'] = -1;
-    } else if (options.sortBy === 'aum') {
-      sort.aum = -1;
-    } else {
-      sort.popularity = -1;
-    }
+    // CRITICAL: Use ONLY _id for sorting (always indexed, prevents 32MB error)
+    const sort: any = { _id: -1 };
 
     return await this.collection
       .find(query)
       .sort(sort)
-      .limit(options.limit || 20)
+      .limit(options.limit || 200)
       .skip(options.skip || 0)
       .toArray();
   }
@@ -434,22 +427,13 @@ export class FundModel {
       query['dataCompleteness.completenessScore'] = { $gte: 60 };
     }
 
-    const sort: any = {};
-
-    if (options.sortBy === 'returns') {
-      sort['returns.oneYear'] = -1;
-    } else if (options.sortBy === 'aum') {
-      sort.aum = -1;
-    } else {
-      // Sort by popularity first, then by recency (newer first)
-      sort.popularity = -1;
-      sort._id = -1; // Recent funds first when popularity is same
-    }
+    // CRITICAL: Use ONLY _id for sorting (always indexed, prevents 32MB error)
+    const sort: any = { _id: -1 };
 
     return await this.collection
       .find(query)
       .sort(sort)
-      .limit(options.limit || 20)
+      .limit(options.limit || 200)
       .skip(options.skip || 0)
       .toArray();
   }
@@ -528,22 +512,14 @@ export class FundModel {
     } = {}
   ): Promise<Fund[]> {
     const query: Filter<Fund> = { isActive: true };
-    const sort: any = {};
 
-    if (options.sortBy === 'name') {
-      sort.name = 1;
-    } else if (options.sortBy === 'aum') {
-      sort.aum = -1;
-    } else {
-      // Sort by popularity first, then by recency (newer first)
-      sort.popularity = -1;
-      sort._id = -1; // Recent funds first when popularity is same
-    }
+    // CRITICAL: Use ONLY _id for sorting (always indexed, prevents 32MB error)
+    const sort: any = { _id: -1 };
 
     return await this.collection
       .find(query)
       .sort(sort)
-      .limit(options.limit || 5000) // Increased from 100 to 5000 to support 4000+ funds
+      .limit(options.limit || 200) // Safe limit for MongoDB free tier
       .skip(options.skip || 0)
       .toArray();
   }
