@@ -6,12 +6,13 @@ const router = Router();
 
 /**
  * GET /funds/quick - Ultra-fast endpoint for initial page load
- * Returns first 500 funds with minimal data, heavily cached
- * Response time: < 100ms with cache, < 500ms without
+ * Returns first 200 funds with minimal data, heavily cached
+ * MongoDB free-tier safe: Uses indexed sort, minimal projection
+ * Response time: < 100ms with cache, < 300ms without
  */
 router.get('/quick', async (req: Request, res: Response) => {
   try {
-    const cacheKey = 'funds:quick:500';
+    const cacheKey = 'funds:quick:200';
 
     // Try cache first (5 minute TTL for super fast response)
     try {
@@ -27,7 +28,10 @@ router.get('/quick', async (req: Request, res: Response) => {
     console.log('📥 Quick funds - fetching from DB');
     const collection = mongodb.getCollection('funds');
 
-    // Minimal projection for fastest transfer
+    // MongoDB free-tier optimized query:
+    // - Limit 200 (safe for 32MB memory)
+    // - Sort by _id (indexed by default)
+    // - Minimal projection (reduces data transfer)
     const funds = await collection
       .find({ isActive: true })
       .project({
@@ -44,8 +48,8 @@ router.get('/quick', async (req: Request, res: Response) => {
         expenseRatio: 1,
         riskLevel: 1,
       })
-      .sort({ popularity: -1, aum: -1 })
-      .limit(500)
+      .sort({ _id: -1 }) // Use indexed field for memory safety
+      .limit(200) // Reduced from 500 for MongoDB free tier
       .toArray();
 
     const response = {
@@ -66,8 +70,8 @@ router.get('/quick', async (req: Request, res: Response) => {
         expenseRatio: f.expenseRatio || 0,
         riskLevel: f.riskLevel || 'MEDIUM',
       })),
-      total: 500,
-      message: 'Quick funds loaded. Use pagination for more.',
+      total: 200,
+      message: 'First 200 funds loaded instantly. Use /batch for more.',
       hasMore: true,
     };
 
@@ -108,8 +112,9 @@ router.get('/count', async (req: Request, res: Response) => {
     const response = {
       success: true,
       total,
-      pages500: Math.ceil(total / 500),
-      message: 'Total fund count',
+      pages: Math.ceil(total / 200),
+      batchSize: 200,
+      message: 'Total fund count - MongoDB free tier optimized',
     };
 
     // Cache for 1 hour
@@ -126,14 +131,14 @@ router.get('/count', async (req: Request, res: Response) => {
 });
 
 /**
- * GET /funds/batch/:page - Load funds in batches of 500
- * For background loading after initial page
- * Example: /funds/batch/2 returns funds 501-1000
+ * GET /funds/batch/:page - Load funds in batches of 200
+ * MongoDB free-tier safe batching for background loading
+ * Example: /funds/batch/2 returns funds 201-400
  */
 router.get('/batch/:page', async (req: Request, res: Response) => {
   try {
     const page = Math.max(1, parseInt(req.params.page) || 1);
-    const batchSize = 500;
+    const batchSize = 200; // Optimized for MongoDB free tier
     const skip = (page - 1) * batchSize;
 
     const cacheKey = `funds:batch:${page}`;
@@ -147,6 +152,7 @@ router.get('/batch/:page', async (req: Request, res: Response) => {
     console.log(`📥 Batch ${page} - fetching from DB`);
     const collection = mongodb.getCollection('funds');
 
+    // MongoDB free-tier safe query with indexed sort
     const funds = await collection
       .find({ isActive: true })
       .project({
@@ -163,7 +169,7 @@ router.get('/batch/:page', async (req: Request, res: Response) => {
         expenseRatio: 1,
         riskLevel: 1,
       })
-      .sort({ popularity: -1, aum: -1 })
+      .sort({ _id: -1 }) // Indexed field for memory safety
       .skip(skip)
       .limit(batchSize)
       .toArray();

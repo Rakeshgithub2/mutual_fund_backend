@@ -19,7 +19,7 @@ const getFundsSchema = z.object({
   subCategory: z.string().optional(), // Add subCategory support
   top: z.enum(['20', '50', '100']).optional(), // Add top funds filter
   page: z.coerce.number().min(1).default(1),
-  limit: z.coerce.number().min(1).max(1000).default(500), // Optimized: default 500, max 1000 for fast initial load
+  limit: z.coerce.number().min(1).max(500).default(200), // MongoDB free-tier safe: default 200, max 500
   sort: z.string().optional(),
 });
 
@@ -170,9 +170,9 @@ export const getFunds = async (
               subCategory: { $in: equitySubcategories },
               isActive: true,
             })
-            .limit(take)
+            .sort({ _id: -1 }) // Use indexed field first
             .skip(skip)
-            .sort({ popularity: -1, _id: -1 })
+            .limit(take)
             .toArray();
           countFilter.subCategory = { $in: equitySubcategories };
         } else if (category === 'commodity') {
