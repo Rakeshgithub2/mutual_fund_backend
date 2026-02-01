@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import authRoutes from './auth.routes';
 import fundsRoutes from './funds';
+import fundsQuickRoutes from './funds-quick';
 import fundManagersRoutes from './fundManagers';
 import usersRoutes from './users';
 import watchlistRoutes from './watchlist';
@@ -26,6 +27,7 @@ const router = Router();
 
 // Core routes
 router.use('/auth', authRoutes);
+router.use('/funds', fundsQuickRoutes); // Quick load routes BEFORE main funds routes
 router.use('/funds', fundsRoutes);
 router.use('/fund-managers', fundManagersRoutes);
 router.use('/suggest', suggestRoutes); // Autocomplete endpoint

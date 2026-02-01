@@ -279,11 +279,11 @@ export async function getAllFunds(req: Request, res: Response): Promise<void> {
       await fetchAndStoreFunds();
     }
 
-    // Parse query parameters
+    // Parse query parameters - optimized for fast initial load
     const page = Math.max(1, parseInt(req.query.page as string) || 1);
     const limit = Math.min(
-      100,
-      Math.max(1, parseInt(req.query.limit as string) || 50)
+      500, // Reduced from 100 to 500 for faster first load
+      Math.max(1, parseInt(req.query.limit as string) || 500) // Default 500
     );
     const skip = (page - 1) * limit;
 

@@ -19,7 +19,7 @@ const getFundsSchema = z.object({
   subCategory: z.string().optional(), // Add subCategory support
   top: z.enum(['20', '50', '100']).optional(), // Add top funds filter
   page: z.coerce.number().min(1).default(1),
-  limit: z.coerce.number().min(1).max(5000).default(100), // Increased from 20 to 100, max from 2500 to 5000
+  limit: z.coerce.number().min(1).max(1000).default(500), // Optimized: default 500, max 1000 for fast initial load
   sort: z.string().optional(),
 });
 
@@ -53,6 +53,20 @@ export const getFunds = async (
       limit,
       sort,
     });
+
+    // Cache first page for instant response (1 hour TTL)
+    if (page === 1 && !query && !type && !category && !subCategory && !top) {
+      const cacheKey = `funds:all:page1:limit${limit}`;
+      try {
+        const cached = await redis.get(cacheKey);
+        if (cached) {
+          console.log('⚡ Cache hit - returning cached first page');
+          return res.json(cached);
+        }
+      } catch (cacheError) {
+        console.log('⚠️  Redis unavailable, fetching from DB');
+      }
+    }
 
     // Handle Top N funds filtering
     if (top) {
@@ -219,6 +233,17 @@ export const getFunds = async (
       limit,
       'Funds retrieved successfully'
     );
+
+    // Cache first page for 1 hour (if Redis available)
+    if (page === 1 && !query && !type && !category && !subCategory && !top) {
+      const cacheKey = `funds:all:page1:limit${limit}`;
+      try {
+        await redis.set(cacheKey, response, 3600); // 1 hour cache
+        console.log('📦 Cached first page for faster subsequent loads');
+      } catch (cacheError) {
+        console.log('⚠️  Redis unavailable, skipping cache');
+      }
+    }
 
     return res.json(response);
   } catch (error) {
