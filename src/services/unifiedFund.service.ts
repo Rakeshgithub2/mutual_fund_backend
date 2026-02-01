@@ -79,7 +79,7 @@ class UnifiedFundService {
       // Execute with timing
       const fundsPromise = this.fundCollection
         .find(query)
-        .sort({ aum: -1 }) // Sort by AUM descending
+        .sort({ _id: -1 }) // Use _id to prevent 32MB error
         .skip(skip)
         .limit(limit)
         .toArray();
@@ -225,7 +225,7 @@ class UnifiedFundService {
 
       const funds = await this.fundCollection
         .find(query)
-        .sort({ aum: -1 })
+        .sort({ _id: -1 }) // Use _id to prevent 32MB error
         .limit(100)
         .toArray();
 

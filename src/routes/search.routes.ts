@@ -338,7 +338,7 @@ router.get('/by-tags', throttle, async (req: Request, res: Response) => {
         tags: { $in: tagList },
         isActive: true,
       })
-      .sort({ popularity: -1 })
+      .sort({ _id: -1 }) // Use _id to prevent 32MB error
       .limit(limitNum)
       .project({
         fundId: 1,

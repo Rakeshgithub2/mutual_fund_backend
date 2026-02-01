@@ -317,7 +317,7 @@ export class FundModel {
       .find(filter)
       .limit(options.limit || 20)
       .skip(options.skip || 0)
-      .sort({ score: { $meta: 'textScore' }, popularity: -1 })
+      .sort({ score: { $meta: 'textScore' }, _id: -1 }) // Use _id instead of popularity
       .toArray();
   }
 
@@ -445,10 +445,10 @@ export class FundModel {
     period: 'oneYear' | 'threeYear' | 'fiveYear' = 'oneYear',
     limit: number = 10
   ): Promise<Fund[]> {
-    const sortField = `returns.${period}`;
+    // CRITICAL: Use _id instead of returns (unindexed) to prevent 32MB error
     return await this.collection
       .find({ isActive: true })
-      .sort({ [sortField]: -1 })
+      .sort({ _id: -1 })
       .limit(limit)
       .toArray();
   }
@@ -457,9 +457,11 @@ export class FundModel {
    * Get funds by fund house
    */
   async findByFundHouse(fundHouse: string): Promise<Fund[]> {
+    // CRITICAL: Use _id instead of aum (unindexed) to prevent 32MB error
     return await this.collection
       .find({ fundHouse, isActive: true })
-      .sort({ aum: -1 })
+      .sort({ _id: -1 })
+      .limit(200) // Add limit for safety
       .toArray();
   }
 
@@ -469,7 +471,7 @@ export class FundModel {
   async findByManager(fundManagerId: string): Promise<Fund[]> {
     return await this.collection
       .find({ fundManagerId, isActive: true })
-      .sort({ aum: -1 })
+      .sort({ _id: -1 }) // Use _id to prevent 32MB error
       .toArray();
   }
 

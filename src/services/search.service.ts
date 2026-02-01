@@ -281,7 +281,7 @@ export class SearchService {
     const results = await this.db
       .collection('funds')
       .find(filter)
-      .sort({ popularity: -1, aum: -1 })
+      .sort({ _id: -1 }) // Use _id to prevent 32MB error
       .limit(10)
       .project(this.getProjection())
       .toArray();
@@ -368,7 +368,7 @@ export class SearchService {
     const results = await this.db
       .collection('funds')
       .find(filter)
-      .sort({ popularity: -1, aum: -1 })
+      .sort({ _id: -1 }) // Use _id to prevent 32MB error
       .limit(15)
       .project(this.getProjection())
       .toArray();
@@ -479,7 +479,7 @@ export class SearchService {
     const results = await this.db
       .collection('funds')
       .find(filter)
-      .sort({ popularity: -1 })
+      .sort({ _id: -1 }) // Use _id to prevent 32MB error
       .limit(limit)
       .project(this.getProjection())
       .toArray();
@@ -677,7 +677,7 @@ export class SearchService {
           { fundId: { $regex: `^${this.escapeRegex(word.toUpperCase())}` } },
         ],
       })
-      .sort({ popularity: -1, aum: -1 })
+      .sort({ _id: -1 }) // Use _id to prevent 32MB error
       .limit(limit)
       .project(this.getProjection())
       .toArray();
@@ -692,7 +692,7 @@ export class SearchService {
           isActive: true,
           name: { $regex: this.escapeRegex(word), $options: 'i' },
         })
-        .sort({ popularity: -1 })
+        .sort({ _id: -1 }) // Use _id to prevent 32MB error
         .limit(limit - results.length)
         .project(this.getProjection())
         .toArray();
@@ -709,7 +709,7 @@ export class SearchService {
           isActive: true,
           tags: { $in: tags },
         })
-        .sort({ popularity: -1 })
+        .sort({ _id: -1 }) // Use _id to prevent 32MB error
         .limit(limit - results.length)
         .project(this.getProjection())
         .toArray();
@@ -758,7 +758,7 @@ export class SearchService {
           },
         ],
       })
-      .sort({ popularity: -1, aum: -1 })
+      .sort({ _id: -1 }) // Use _id to prevent 32MB error
       .limit(limit)
       .project(this.getProjection())
       .toArray();
@@ -790,7 +790,7 @@ export class SearchService {
             },
           ],
         })
-        .sort({ popularity: -1 })
+        .sort({ _id: -1 }) // Use _id to prevent 32MB error
         .limit(limit - results.length)
         .project(this.getProjection())
         .toArray();
@@ -809,7 +809,7 @@ export class SearchService {
             $options: 'i',
           },
         })
-        .sort({ popularity: -1 })
+        .sort({ _id: -1 }) // Use _id to prevent 32MB error
         .limit(limit - results.length)
         .project(this.getProjection())
         .toArray();
@@ -843,7 +843,7 @@ export class SearchService {
             $options: 'i',
           },
         })
-        .sort({ popularity: -1 })
+        .sort({ _id: -1 }) // Use _id to prevent 32MB error
         .limit(limit - results.length)
         .project(this.getProjection())
         .toArray();

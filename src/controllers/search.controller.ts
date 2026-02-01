@@ -73,7 +73,7 @@ export async function searchFunds(req: Request, res: Response): Promise<void> {
           },
         }
       )
-      .sort({ score: { $meta: 'textScore' }, 'aum.value': -1 })
+      .sort({ score: { $meta: 'textScore' } }) // Text search only, no secondary sort
       .limit(limitNum)
       .toArray();
 
@@ -172,7 +172,7 @@ async function searchFundsRegex(req: Request, res: Response): Promise<void> {
         { amc: { $regex: searchQuery, $options: 'i' } },
       ],
     })
-    .sort({ 'aum.value': -1 })
+    .sort({ _id: -1 }) // Use _id to prevent 32MB error
     .limit(limitNum)
     .toArray();
 

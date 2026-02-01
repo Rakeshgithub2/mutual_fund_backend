@@ -39,8 +39,8 @@ export const searchFunds = async (
         ],
         isActive: true,
       })
+      .sort({ _id: -1 }) // Use _id instead of popularity/aum to prevent 32MB error
       .limit(limit)
-      .sort({ popularity: -1, aum: -1 })
       .toArray();
 
     console.log('✅ Found', funds.length, 'funds matching:', query);

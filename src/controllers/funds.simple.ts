@@ -451,7 +451,7 @@ export const getSuggestions = async (
         isActive: true,
       })
       .limit(15) // Increased limit for better suggestions
-      .sort({ popularity: -1, aum: -1 })
+      .sort({ _id: -1 }) // Use _id to prevent 32MB error
       .toArray();
 
     // Format suggestions for autocomplete

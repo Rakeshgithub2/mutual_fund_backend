@@ -218,7 +218,7 @@ export const priceRefreshWorker = new Worker(
           isActive: true,
           popularity: { $gte: 100 }, // Only high-demand funds
         })
-        .sort({ popularity: -1 })
+        .sort({ _id: -1 }) // Use _id to prevent 32MB error
         .limit(50)
         .project({ fundId: 1, symbol: 1 })
         .toArray();
