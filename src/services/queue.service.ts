@@ -81,7 +81,7 @@ export async function checkQueueStatus(
       { sort: { requestedAt: -1 } }
     );
 
-    return item as QueueItem | null;
+    return item as unknown as QueueItem | null;
   } catch (error) {
     console.error('Error checking queue status:', error);
     return null;

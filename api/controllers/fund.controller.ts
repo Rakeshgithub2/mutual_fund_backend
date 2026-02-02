@@ -279,11 +279,11 @@ export async function getAllFunds(req: Request, res: Response): Promise<void> {
       await fetchAndStoreFunds();
     }
 
-    // Parse query parameters - optimized for fast initial load
+    // Parse query parameters
     const page = Math.max(1, parseInt(req.query.page as string) || 1);
     const limit = Math.min(
-      500, // Reduced from 100 to 500 for faster first load
-      Math.max(1, parseInt(req.query.limit as string) || 500) // Default 500
+      100,
+      Math.max(1, parseInt(req.query.limit as string) || 50)
     );
     const skip = (page - 1) * limit;
 
@@ -315,10 +315,35 @@ export async function getAllFunds(req: Request, res: Response): Promise<void> {
     // Get total count
     const total = await collection.countDocuments(filter);
 
-    // Get funds
+    // Get funds with optimized query
+    // Using projection to reduce data transfer and lean() equivalent for MongoDB native driver
     const funds = await collection
-      .find(filter)
-      .sort({ aum: -1 })
+      .find(filter, {
+        projection: {
+          // Only return fields needed for listing (reduces memory)
+          fundId: 1,
+          amfiCode: 1,
+          name: 1,
+          category: 1,
+          subCategory: 1,
+          fundType: 1,
+          fundHouse: 1,
+          fundManager: 1,
+          currentNav: 1,
+          returns: 1,
+          aum: 1,
+          expenseRatio: 1,
+          riskLevel: 1,
+          launchDate: 1,
+          isActive: 1,
+          // Exclude large arrays from listing
+          holdings: 0,
+          sectorAllocation: 0,
+          tags: 0,
+          searchTerms: 0,
+        },
+      })
+      .sort({ aum: -1 }) // This now uses the aum_sort_desc index
       .skip(skip)
       .limit(limit)
       .toArray();

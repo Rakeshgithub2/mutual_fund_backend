@@ -49,13 +49,29 @@ export async function calculateOverlap(
     await mongodb.connect();
     const collection = mongodb.getCollection('funds');
 
-    // Fetch all funds with holdings
+    // Fetch all funds with holdings - OPTIMIZED with projection
+    // Only fetch fields needed for overlap calculation
     const funds = await collection
-      .find({
-        $or: fundIds.map((id: string) => ({
-          $or: [{ fundId: id }, { amfiCode: id }, { _id: id as any }],
-        })),
-      })
+      .find(
+        {
+          $or: fundIds.map((id: string) => ({
+            $or: [{ fundId: id }, { amfiCode: id }, { _id: id as any }],
+          })),
+        },
+        {
+          projection: {
+            fundId: 1,
+            name: 1,
+            category: 1,
+            holdings: 1,
+            sectorAllocation: 1,
+            // Exclude everything else to reduce memory
+            returns: 0,
+            aum: 0,
+            riskMetrics: 0,
+          },
+        }
+      )
       .toArray();
 
     if (funds.length === 0) {

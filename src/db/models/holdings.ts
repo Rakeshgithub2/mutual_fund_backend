@@ -1,4 +1,4 @@
-import { Document, Collection } from 'mongodb';
+import { Document, Collection, Db } from 'mongodb';
 
 export interface Holding {
   schemeCode: string;
@@ -10,6 +10,6 @@ export interface Holding {
   fetchedAt: Date;
 }
 
-export function getHoldingsCollection(db: any): Collection<Holding> {
+export function getHoldingsCollection(db: Db): Collection<Holding> {
   return db.collection<Holding>('holdings');
 }

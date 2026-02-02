@@ -3,7 +3,7 @@
  * Manages all automated jobs with retry logic and monitoring
  */
 
-import { Queue, Worker, QueueScheduler } from 'bullmq';
+import { Queue, Worker } from 'bullmq';
 import IORedis from 'ioredis';
 import MarketIndicesJob from '../jobs/market-indices.job';
 import DailyNAVJob from '../jobs/daily-nav.job';
@@ -21,12 +21,8 @@ export const marketIndicesQueue = new Queue('market-indices', { connection });
 export const dailyNAVQueue = new Queue('daily-nav', { connection });
 export const weeklyGraphQueue = new Queue('weekly-graph', { connection });
 
-// Queue Schedulers (required for delayed/repeated jobs)
-const marketIndicesScheduler = new QueueScheduler('market-indices', {
-  connection,
-});
-const dailyNAVScheduler = new QueueScheduler('daily-nav', { connection });
-const weeklyGraphScheduler = new QueueScheduler('weekly-graph', { connection });
+// Note: QueueScheduler is deprecated in BullMQ v3+
+// Schedulers are now built into Queue and Worker classes
 
 /**
  * Initialize all scheduled jobs

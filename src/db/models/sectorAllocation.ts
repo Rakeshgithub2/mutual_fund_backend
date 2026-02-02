@@ -1,4 +1,4 @@
-import { Document, Collection } from 'mongodb';
+import { Document, Collection, Db } from 'mongodb';
 
 export interface SectorAllocation {
   schemeCode: string;
@@ -9,7 +9,7 @@ export interface SectorAllocation {
 }
 
 export function getSectorAllocationCollection(
-  db: any
+  db: Db
 ): Collection<SectorAllocation> {
   return db.collection<SectorAllocation>('sectorAllocation');
 }

@@ -56,13 +56,35 @@ export async function compareFunds(req: Request, res: Response): Promise<void> {
     await mongodb.connect();
     const collection = mongodb.getCollection('funds');
 
-    // Fetch all funds
+    // Fetch all funds - OPTIMIZED with projection
+    // Only fetch fields needed for comparison
     const funds = await collection
-      .find({
-        $or: fundIds.map((id: string) => ({
-          $or: [{ fundId: id }, { amfiCode: id }, { _id: id as any }],
-        })),
-      })
+      .find(
+        {
+          $or: fundIds.map((id: string) => ({
+            $or: [{ fundId: id }, { amfiCode: id }, { _id: id as any }],
+          })),
+        },
+        {
+          projection: {
+            fundId: 1,
+            name: 1,
+            category: 1,
+            subCategory: 1,
+            fundHouse: 1,
+            currentNav: 1,
+            returns: 1,
+            expenseRatio: 1,
+            aum: 1,
+            riskLevel: 1,
+            // Exclude large fields not needed for comparison
+            holdings: 0,
+            sectorAllocation: 0,
+            tags: 0,
+            searchTerms: 0,
+          },
+        }
+      )
       .toArray();
 
     if (funds.length === 0) {
