@@ -1,0 +1,39 @@
+version: 0.2
+
+# AWS CodeBuild specification file
+# This builds your application on AWS automatically
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - echo "Installing dependencies..."
+      - npm install -g pnpm
+      - pnpm install --frozen-lockfile
+
+  pre_build:
+    commands:
+      - echo "Generating Prisma Client..."
+      - npx prisma generate
+
+  build:
+    commands:
+      - echo "Building TypeScript application..."
+      - pnpm run build
+      - echo "Build completed successfully!"
+
+  post_build:
+    commands:
+      - echo "Preparing artifacts..."
+      - ls -la dist/
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: dist
+  name: backend-build-$(date +%Y%m%d-%H%M%S)
+
+cache:
+  paths:
+    - 'node_modules/**/*'
