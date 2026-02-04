@@ -15,6 +15,14 @@
     "moduleResolution": "node",
     "typeRoots": ["./node_modules/@types"]
   },
-  "include": ["api/**/*", "src/**/*"],
+  "include": [
+    "api/**/*",
+    "src/**/*",
+    "services/**/*",
+    "jobs/**/*",
+    "routes/**/*",
+    "workers/**/*",
+    "cron/**/*"
+  ],
   "exclude": ["node_modules", "dist", "tests"]
 }
