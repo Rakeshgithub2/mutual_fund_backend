@@ -84,10 +84,17 @@ export type PortfolioInput = z.infer<typeof PortfolioSchema>;
  */
 export class PortfolioModel {
   private static instance: PortfolioModel | null = null;
-  private collection: Collection<Portfolio>;
+  private _collection: Collection<Portfolio> | null = null;
 
   private constructor() {
-    this.collection = mongodb.getCollection<Portfolio>('portfolios');
+    // Don't initialize collection here - do it lazily
+  }
+
+  private get collection(): Collection<Portfolio> {
+    if (!this._collection) {
+      this._collection = mongodb.getCollection<Portfolio>('portfolios');
+    }
+    return this._collection;
   }
 
   static getInstance(): PortfolioModel {

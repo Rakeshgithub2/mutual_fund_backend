@@ -69,10 +69,20 @@ export type FundManagerInput = z.infer<typeof FundManagerSchema>;
  */
 export class FundManagerModel {
   private static instance: FundManagerModel;
-  private collection: Collection<FundManager>;
+  private _collection: Collection<FundManager> | null = null;
 
   constructor() {
-    this.collection = mongodb.getCollection<FundManager>('fundManagers');
+    // Don't initialize collection here - do it lazily
+  }
+
+  /**
+   * Lazy-load collection to avoid initialization order issues
+   */
+  private get collection(): Collection<FundManager> {
+    if (!this._collection) {
+      this._collection = mongodb.getCollection<FundManager>('fundManagers');
+    }
+    return this._collection;
   }
 
   /**

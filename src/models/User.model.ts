@@ -77,10 +77,17 @@ export type UserInput = z.infer<typeof UserSchema>;
  */
 export class UserModel {
   private static instance: UserModel | null = null;
-  private collection: Collection<User>;
+  private _collection: Collection<User> | null = null;
 
   private constructor() {
-    this.collection = mongodb.getCollection<User>('users');
+    // Don't initialize collection here - do it lazily
+  }
+
+  private get collection(): Collection<User> {
+    if (!this._collection) {
+      this._collection = mongodb.getCollection<User>('users');
+    }
+    return this._collection;
   }
 
   static getInstance(): UserModel {

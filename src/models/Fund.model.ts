@@ -130,10 +130,20 @@ export type FundInput = z.infer<typeof FundSchema>;
  */
 export class FundModel {
   private static instance: FundModel;
-  private collection: Collection<Fund>;
+  private _collection: Collection<Fund> | null = null;
 
   constructor() {
-    this.collection = mongodb.getCollection<Fund>('funds');
+    // Don't initialize collection here - do it lazily
+  }
+
+  /**
+   * Lazy-load collection to avoid initialization order issues
+   */
+  private get collection(): Collection<Fund> {
+    if (!this._collection) {
+      this._collection = mongodb.getCollection<Fund>('funds');
+    }
+    return this._collection;
   }
 
   /**

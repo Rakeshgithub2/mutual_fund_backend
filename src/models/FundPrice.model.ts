@@ -27,10 +27,17 @@ export type FundPriceInput = z.infer<typeof FundPriceSchema>;
  */
 export class FundPriceModel {
   private static instance: FundPriceModel | null = null;
-  private collection: Collection<FundPrice>;
+  private _collection: Collection<FundPrice> | null = null;
 
   private constructor() {
-    this.collection = mongodb.getCollection<FundPrice>('fundPrices');
+    // Don't initialize collection here - do it lazily
+  }
+
+  private get collection(): Collection<FundPrice> {
+    if (!this._collection) {
+      this._collection = mongodb.getCollection<FundPrice>('fundPrices');
+    }
+    return this._collection;
   }
 
   static getInstance(): FundPriceModel {

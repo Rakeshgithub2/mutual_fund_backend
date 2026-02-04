@@ -33,10 +33,17 @@ export type WatchlistInput = z.infer<typeof WatchlistSchema>;
  */
 export class WatchlistModel {
   private static instance: WatchlistModel | null = null;
-  private collection: Collection<Watchlist>;
+  private _collection: Collection<Watchlist> | null = null;
 
   private constructor() {
-    this.collection = mongodb.getCollection<Watchlist>('watchlists');
+    // Don't initialize collection here - do it lazily
+  }
+
+  private get collection(): Collection<Watchlist> {
+    if (!this._collection) {
+      this._collection = mongodb.getCollection<Watchlist>('watchlists');
+    }
+    return this._collection;
   }
 
   static getInstance(): WatchlistModel {

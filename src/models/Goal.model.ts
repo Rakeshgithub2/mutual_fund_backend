@@ -46,10 +46,17 @@ export type GoalInput = z.infer<typeof GoalSchema>;
  */
 export class GoalModel {
   private static instance: GoalModel | null = null;
-  private collection: Collection<Goal>;
+  private _collection: Collection<Goal> | null = null;
 
   private constructor() {
-    this.collection = mongodb.getCollection<Goal>('goals');
+    // Don't initialize collection here - do it lazily
+  }
+
+  private get collection(): Collection<Goal> {
+    if (!this._collection) {
+      this._collection = mongodb.getCollection<Goal>('goals');
+    }
+    return this._collection;
   }
 
   static getInstance(): GoalModel {
