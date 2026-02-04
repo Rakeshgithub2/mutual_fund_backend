@@ -3,54 +3,23 @@ import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 import { createServer } from 'http';
+
 import routes from './routes';
+import marketHistoryRoutes from './routes/market-history';
 import { errorHandler } from './middlewares/error';
 import { generalRateLimit } from './middleware/rateLimiter';
 import { mongodb } from './db/mongodb';
-// Import Socket.IO and Change Streams (will handle gracefully if not available)
-// import { initializeSocket } from './services/socket';
-// import { startWatchlistChangeStream } from './services/changeStreams';
-
-// Import Market Indices Service for auto-update
 import { marketIndicesService } from './services/marketIndices.service';
-import marketHistoryRoutes from './routes/market-history';
 
-// Import new professional data sync services
 const { initializeServices } = require('./init');
-
-// Import Reminder Scheduler for real-time user reminders
 const { startReminderScheduler } = require('./schedulers/reminder.scheduler');
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3002;
 
-// Initialize database connection
-async function initializeDatabase() {
-  try {
-    await mongodb.connect();
-    console.log('✅ Database initialized successfully');
-  } catch (error) {
-    console.error('❌ Failed to initialize database:', error);
-    process.exit(1);
-  }
-}
-
-// Initialize market indices with force update
-async function initializeMarketIndices() {
-  try {
-    console.log('📈 Initializing market indices...');
-    await marketIndicesService.refreshAllIndices();
-    console.log('✅ Market indices initialized');
-  } catch (error) {
-    console.error('⚠️  Failed to initialize market indices:', error);
-    console.log('📊 Will use cached/default values');
-  }
-}
-
-// Security middleware
+/* ===================== MIDDLEWARE ===================== */
 app.use(helmet());
 app.use(
   cors({
@@ -67,45 +36,53 @@ app.use(
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
-
-// Rate limiting - DISABLED FOR DEBUGGING
-// app.use(generalRateLimit);
-
-// Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// app.use(generalRateLimit); // Uncomment to enable rate limiting
 
-// Health check endpoint
-app.get('/health', (req, res) => {
+/* ======================= ROUTES ======================= */
+app.get('/', (_req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Mutual Funds Backend API is running',
+    port: PORT,
+    timestamp: new Date().toISOString(),
+    version: '2.0.0',
+  });
+});
+
+app.get('/health', (_req, res) => {
   res.json({
     status: 'OK',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    version: '2.0.0', // Complete fund details with holdings and sectors
+    version: '2.0.0',
   });
 });
 
-// Test endpoint
-app.get('/api/test', (req, res) => {
-  console.log('Test endpoint hit');
-  res.json({ message: 'API is working!' });
+app.get('/api/test', (_req, res) => {
+  console.log('✅ Test endpoint hit');
+  res.json({
+    success: true,
+    message: 'API is working!',
+    timestamp: new Date().toISOString(),
+  });
 });
 
-// API routes
+// API routes - Main router
 app.use('/api', routes);
 
-// Market history routes (historical data for charts)
-app.use('/api/market', marketHistoryRoutes);
+// Market history routes
+app.use('/api/market-history', marketHistoryRoutes);
 
-// Market Indices endpoint (live auto-updating data)
-app.get('/api/market/summary', async (req, res) => {
+// Market summary endpoint
+app.get('/api/market/summary', async (_req, res) => {
   try {
     const indices = await marketIndicesService.getAllIndices();
     res.json({
       success: true,
       data: indices,
       lastUpdated: new Date().toISOString(),
-      marketOpen: true, // TODO: implement market status check
     });
   } catch (error: any) {
     console.error('Error fetching market indices:', error);
@@ -118,127 +95,136 @@ app.get('/api/market/summary', async (req, res) => {
 
 // 404 handler
 app.use('*', (req, res) => {
+  console.log(`❌ 404 - Route not found: ${req.method} ${req.originalUrl}`);
   res.status(404).json({
+    success: false,
     error: 'Route not found',
     path: req.originalUrl,
+    method: req.method,
   });
 });
 
-// Error handling middleware
+/* =================== ERROR HANDLER ==================== */
 app.use(errorHandler);
 
-// Global error handlers
-process.on('uncaughtException', (error) => {
-  console.error('💥 Uncaught Exception:', error);
-  console.error('Stack:', error.stack);
-  console.error('⚠️ Server will continue running to help debug');
-  // Don't exit to see what's happening
-  // process.exit(1);
-});
+/* ================= INITIALIZATION ==================== */
+async function initializeDatabase() {
+  try {
+    await mongodb.connect();
+    console.log('✅ Database connected successfully');
+  } catch (error) {
+    console.error('❌ Database connection failed:', error);
+    process.exit(1);
+  }
+}
 
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('💥 Unhandled Rejection at:', promise, 'reason:', reason);
-  console.error('⚠️ Server will continue running to help debug');
-  // Don't exit to see what's happening
-  // process.exit(1);
-});
+async function initializeMarketIndices() {
+  try {
+    console.log('📈 Initializing market indices...');
+    await marketIndicesService.refreshAllIndices();
+    console.log('✅ Market indices initialized');
+  } catch (error) {
+    console.log('⚠️ Using cached/default market indices');
+  }
+}
 
-// Log successful initialization
-console.log('🎯 All error handlers registered');
+/* =================== START SERVER ==================== */
+async function startServer() {
+  try {
+    // Initialize database
+    await initializeDatabase();
 
-// Start server
-if (process.env.NODE_ENV !== 'test') {
-  const httpServer = createServer(app);
+    // Initialize market indices
+    await initializeMarketIndices();
 
-  // Initialize Socket.IO (commented out until socket.io is installed)
-  // const io = initializeSocket(httpServer);
-  // console.log('✅ Socket.IO initialized');
+    // Initialize services
+    console.log('🔧 Initializing services...');
+    await initializeServices();
+    console.log('✅ Services initialized');
 
-  // Start MongoDB Change Streams (optional - requires replica set)
-  // startWatchlistChangeStream().catch(err => {
-  //   console.log('ℹ️ Change Streams not started:', err.message);
-  // });
+    // Start reminder scheduler
+    console.log('⏰ Starting reminder scheduler...');
+    startReminderScheduler();
+    console.log('✅ Reminder scheduler active');
 
-  // Initialize database first, then start server
-  initializeDatabase()
-    .then(async () => {
-      // Initialize market indices data
-      await initializeMarketIndices();
+    // Create HTTP server
+    const server = createServer(app);
 
-      // Initialize professional data sync services (NAV + Market Indices)
-      await initializeServices();
+    // Start listening
+    server.listen(Number(PORT), '0.0.0.0', () => {
+      console.log('');
+      console.log('='.repeat(60));
+      console.log(`🚀 Server running on http://0.0.0.0:${PORT}`);
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log('='.repeat(60));
+      console.log('');
+      console.log('Available Routes:');
+      console.log('  GET  /              - API status');
+      console.log('  GET  /health        - Health check');
+      console.log('  GET  /api/test      - API test');
+      console.log('  *    /api/auth/*    - Authentication routes');
+      console.log('  *    /api/funds/*   - Mutual funds routes');
+      console.log('  *    /api/users/*   - User routes');
+      console.log('  *    /api/portfolio/* - Portfolio routes');
+      console.log('  *    /api/watchlist/* - Watchlist routes');
+      console.log('');
+      console.log('✅ All systems operational');
+      console.log('='.repeat(60));
+    });
 
-      // Start real-time reminder scheduler
-      console.log('⏰ Starting reminder scheduler...');
-      startReminderScheduler();
-      console.log('✅ Reminder scheduler active - checking every 5 minutes');
-
-      const server = httpServer.listen(Number(PORT), '0.0.0.0', () => {
-        console.log(`✅ Server is running on http://0.0.0.0:${PORT}`);
-        console.log(`✅ Server is running on http://localhost:${PORT}`);
-        console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-        console.log(
-          `📡 WebSocket ready for real-time updates (after npm install)`
-        );
-        console.log('🎯 Server is alive and listening for requests');
-
-        // Professional data services now active
-        console.log('📈 Professional data sync services active');
-        console.log('💡 NAV: Daily 6 PM IST | Indices: Hourly during trading');
-
-        // Keep the process alive - multiple strategies
-        process.stdin.resume();
-
-        // Add keepalive interval to keep event loop active
-        setInterval(() => {
-          // Log to confirm server is alive
-          console.log(
-            `🔄 Server alive check at ${new Date().toLocaleTimeString()}`
-          );
-        }, 1000 * 60); // Every minute
-
-        console.log('✅ Server keepalive configured - will stay running');
-      });
-
-      server.on('error', (error: any) => {
-        if (error.code === 'EADDRINUSE') {
-          console.error(`❌ Port ${PORT} is already in use`);
-        } else {
-          console.error('❌ Server error:', error);
-        }
-        process.exit(1);
-      });
-
-      // Add listeners for unhandled errors
-      process.on('unhandledRejection', (reason, promise) => {
-        console.error('💥 Unhandled Rejection at:', promise, 'reason:', reason);
-      });
-
-      process.on('uncaughtException', (error) => {
-        console.error('💥 Uncaught Exception:', error);
-      });
-
-      // Prevent process exit with signal handlers
-      process.on('SIGTERM', () => {
-        console.log('\n⚠️  SIGTERM received, shutting down gracefully...');
-        server.close(() => {
-          console.log('✅ Server closed');
-          process.exit(0);
-        });
-      });
-
-      process.on('SIGINT', () => {
-        console.log('\n⚠️  SIGINT received, shutting down gracefully...');
-        server.close(() => {
-          console.log('✅ Server closed');
-          process.exit(0);
-        });
-      });
-    })
-    .catch((error) => {
-      console.error('❌ Failed to start server:', error);
+    // Error handling for server
+    server.on('error', (error: any) => {
+      if (error.code === 'EADDRINUSE') {
+        console.error(`❌ Port ${PORT} is already in use`);
+        console.log(`💡 Try: kill -9 $(lsof -ti:${PORT})`);
+      } else {
+        console.error('❌ Server error:', error);
+      }
       process.exit(1);
     });
+
+    // Graceful shutdown handlers
+    process.on('SIGTERM', () => {
+      console.log('\n⚠️ SIGTERM received, shutting down gracefully...');
+      server.close(() => {
+        console.log('✅ Server closed');
+        mongodb.disconnect().then(() => {
+          console.log('✅ Database connection closed');
+          process.exit(0);
+        });
+      });
+    });
+
+    process.on('SIGINT', () => {
+      console.log('\n⚠️ SIGINT received, shutting down gracefully...');
+      server.close(() => {
+        console.log('✅ Server closed');
+        mongodb.disconnect().then(() => {
+          console.log('✅ Database connection closed');
+          process.exit(0);
+        });
+      });
+    });
+
+    // Global error handlers
+    process.on('unhandledRejection', (reason, promise) => {
+      console.error('💥 Unhandled Rejection at:', promise, 'reason:', reason);
+    });
+
+    process.on('uncaughtException', (error) => {
+      console.error('💥 Uncaught Exception:', error);
+      console.error('Stack:', error.stack);
+    });
+  } catch (error) {
+    console.error('❌ Failed to start server:', error);
+    process.exit(1);
+  }
+}
+
+// Start server only if not in test mode
+if (process.env.NODE_ENV !== 'test') {
+  startServer();
 }
 
 export default app;

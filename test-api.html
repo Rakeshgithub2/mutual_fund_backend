@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Backend API Tester</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      h1 {
+        color: #333;
+        margin-bottom: 10px;
+      }
+
+      .subtitle {
+        color: #666;
+        font-size: 14px;
+      }
+
+      .config {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        margin-bottom: 20px;
+      }
+
+      .config input {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+
+      .config label {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+        font-weight: bold;
+      }
+
+      .endpoints {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+      }
+
+      .endpoint-card {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .endpoint-card h3 {
+        color: #333;
+        margin-bottom: 10px;
+      }
+
+      .endpoint-path {
+        background: #f0f0f0;
+        padding: 10px;
+        border-radius: 5px;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        margin-bottom: 15px;
+        color: #667eea;
+        font-weight: bold;
+      }
+
+      button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        width: 100%;
+        transition: transform 0.2s;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      .response {
+        margin-top: 15px;
+        padding: 15px;
+        border-radius: 5px;
+        min-height: 100px;
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+
+      .response.success {
+        background: #d4edda;
+        color: #155724;
+        border: 2px solid #c3e6cb;
+      }
+
+      .response.error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 2px solid #f5c6cb;
+      }
+
+      .response.loading {
+        background: #fff3cd;
+        color: #856404;
+        border: 2px solid #ffeeba;
+      }
+
+      .status-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+
+      .status-indicator.success {
+        background: #28a745;
+      }
+
+      .status-indicator.error {
+        background: #dc3545;
+      }
+
+      .status-indicator.loading {
+        background: #ffc107;
+        animation: pulse 1s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🚀 Backend API Tester</h1>
+        <p class="subtitle">Test your Mutual Funds Backend Server</p>
+      </div>
+
+      <div class="config">
+        <label for="baseUrl">Base URL:</label>
+        <input
+          type="text"
+          id="baseUrl"
+          value="http://localhost:3002"
+          placeholder="http://localhost:3002"
+        />
+      </div>
+
+      <div class="endpoints">
+        <div class="endpoint-card">
+          <h3>Root Endpoint</h3>
+          <div class="endpoint-path">GET /</div>
+          <button onclick="testEndpoint('/')">Test Root</button>
+          <div id="response-root" class="response" style="display: none"></div>
+        </div>
+
+        <div class="endpoint-card">
+          <h3>Health Check</h3>
+          <div class="endpoint-path">GET /health</div>
+          <button onclick="testEndpoint('/health')">Test Health</button>
+          <div
+            id="response-health"
+            class="response"
+            style="display: none"
+          ></div>
+        </div>
+
+        <div class="endpoint-card">
+          <h3>API Test</h3>
+          <div class="endpoint-path">GET /api/test</div>
+          <button onclick="testEndpoint('/api/test')">Test API</button>
+          <div id="response-test" class="response" style="display: none"></div>
+        </div>
+
+        <div class="endpoint-card">
+          <h3>Funds List</h3>
+          <div class="endpoint-path">GET /api/funds</div>
+          <button onclick="testEndpoint('/api/funds')">Test Funds</button>
+          <div id="response-funds" class="response" style="display: none"></div>
+        </div>
+
+        <div class="endpoint-card">
+          <h3>Auth Check</h3>
+          <div class="endpoint-path">GET /api/auth/me</div>
+          <button onclick="testEndpoint('/api/auth/me')">Test Auth</button>
+          <div id="response-auth" class="response" style="display: none"></div>
+        </div>
+
+        <div class="endpoint-card">
+          <h3>Market Summary</h3>
+          <div class="endpoint-path">GET /api/market/summary</div>
+          <button onclick="testEndpoint('/api/market/summary')">
+            Test Market
+          </button>
+          <div
+            id="response-market"
+            class="response"
+            style="display: none"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      async function testEndpoint(path) {
+        const baseUrl = document.getElementById('baseUrl').value;
+        const url = baseUrl + path;
+        const responseId =
+          'response-' +
+            path
+              .split('/')
+              .pop()
+              .replace(/[^a-zA-Z]/g, '') || 'root';
+        const responseDiv = document.getElementById(responseId);
+
+        // Show loading state
+        responseDiv.style.display = 'block';
+        responseDiv.className = 'response loading';
+        responseDiv.innerHTML =
+          '<span class="status-indicator loading"></span>Loading...';
+
+        try {
+          const startTime = Date.now();
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          const endTime = Date.now();
+          const duration = endTime - startTime;
+
+          const data = await response.json();
+
+          if (response.ok) {
+            responseDiv.className = 'response success';
+            responseDiv.innerHTML = `<span class="status-indicator success"></span><strong>✅ SUCCESS (${response.status})</strong> - ${duration}ms\n\n${JSON.stringify(data, null, 2)}`;
+          } else if (response.status === 401 || response.status === 403) {
+            responseDiv.className = 'response success';
+            responseDiv.innerHTML = `<span class="status-indicator success"></span><strong>ℹ️ Route Exists (${response.status})</strong> - Auth Required\n\n${JSON.stringify(data, null, 2)}`;
+          } else {
+            responseDiv.className = 'response error';
+            responseDiv.innerHTML = `<span class="status-indicator error"></span><strong>⚠️ Error (${response.status})</strong>\n\n${JSON.stringify(data, null, 2)}`;
+          }
+        } catch (error) {
+          responseDiv.className = 'response error';
+          responseDiv.innerHTML = `<span class="status-indicator error"></span><strong>❌ CONNECTION FAILED</strong>\n\n${error.message}\n\nPossible issues:\n- Server not running\n- Wrong URL\n- CORS issue\n- Network problem`;
+        }
+      }
+
+      // Test root endpoint on page load
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          testEndpoint('/');
+          testEndpoint('/health');
+        }, 500);
+      });
+    </script>
+  </body>
+</html>

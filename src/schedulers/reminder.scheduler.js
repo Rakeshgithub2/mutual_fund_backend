@@ -5,10 +5,9 @@
  */
 
 const cron = require('node-cron');
-const ReminderJob = require('../jobs/reminder.job');
+const reminderJob = require('../jobs/reminder.job');
 
 let reminderScheduler = null;
-const reminderJob = new ReminderJob();
 
 /**
  * Start the reminder scheduler
