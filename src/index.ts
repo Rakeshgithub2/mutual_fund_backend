@@ -17,7 +17,7 @@ const { startReminderScheduler } = require('./schedulers/reminder.scheduler');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3002;
+const PORT: number = Number(process.env.PORT) || 3002;
 
 /* ===================== MIDDLEWARE ===================== */
 app.use(helmet());
@@ -151,7 +151,7 @@ async function startServer() {
     const server = createServer(app);
 
     // Start listening
-    server.listen(Number(PORT), '0.0.0.0', () => {
+    server.listen(PORT, '0.0.0.0', () => {
       console.log('');
       console.log('='.repeat(60));
       console.log(`🚀 Server running on http://0.0.0.0:${PORT}`);
