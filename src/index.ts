@@ -1,8 +1,11 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import dotenv from 'dotenv';
 import { createServer } from 'http';
+import mongoose from 'mongoose';
 
 import routes from './routes';
 import marketHistoryRoutes from './routes/market-history';
@@ -13,8 +16,6 @@ import { marketIndicesService } from './services/marketIndices.service';
 
 const { initializeServices } = require('./init');
 const { startReminderScheduler } = require('./schedulers/reminder.scheduler');
-
-dotenv.config();
 
 const app = express();
 const PORT: number = Number(process.env.PORT) || 3002;
@@ -110,8 +111,20 @@ app.use(errorHandler);
 /* ================= INITIALIZATION ==================== */
 async function initializeDatabase() {
   try {
+    // Connect native MongoDB driver
     await mongodb.connect();
-    console.log('✅ Database connected successfully');
+    console.log('✅ Native MongoDB driver connected');
+
+    // Connect Mongoose (for models using Mongoose schemas)
+    const DATABASE_URL =
+      process.env.DATABASE_URL || 'mongodb://localhost:27017/mutual_funds_db';
+    await mongoose.connect(DATABASE_URL, {
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
+    console.log('✅ Mongoose connected successfully');
+    console.log('✅ Database fully initialized');
   } catch (error) {
     console.error('❌ Database connection failed:', error);
     process.exit(1);
@@ -189,8 +202,8 @@ async function startServer() {
       console.log('\n⚠️ SIGTERM received, shutting down gracefully...');
       server.close(() => {
         console.log('✅ Server closed');
-        mongodb.disconnect().then(() => {
-          console.log('✅ Database connection closed');
+        Promise.all([mongodb.disconnect(), mongoose.disconnect()]).then(() => {
+          console.log('✅ Database connections closed');
           process.exit(0);
         });
       });
@@ -200,8 +213,8 @@ async function startServer() {
       console.log('\n⚠️ SIGINT received, shutting down gracefully...');
       server.close(() => {
         console.log('✅ Server closed');
-        mongodb.disconnect().then(() => {
-          console.log('✅ Database connection closed');
+        Promise.all([mongodb.disconnect(), mongoose.disconnect()]).then(() => {
+          console.log('✅ Database connections closed');
           process.exit(0);
         });
       });
