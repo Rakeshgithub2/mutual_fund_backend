@@ -4,7 +4,7 @@
  * Makes the database self-growing with fresh funds
  */
 
-const Fund = require('../dist/src/models/Fund.model');
+const Fund = require('../src/models/Fund.model');
 const axios = require('axios');
 
 class AutoFundExpansionJob {

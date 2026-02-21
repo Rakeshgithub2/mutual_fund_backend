@@ -7,7 +7,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const axios = require('axios');
-const MarketIndices = require('../dist/src/models/MarketIndices.model');
+const MarketIndices = require('../src/models/MarketIndices.model');
 
 const DATABASE_URL = process.env.DATABASE_URL;
 

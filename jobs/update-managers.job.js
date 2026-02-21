@@ -4,7 +4,7 @@
 
 require('dotenv').config();
 const mongoose = require('mongoose');
-const Fund = require('../dist/src/models/Fund.model');
+const Fund = require('../src/models/Fund.model');
 
 async function updateFundManagers() {
   try {
