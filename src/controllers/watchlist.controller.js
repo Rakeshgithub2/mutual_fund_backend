@@ -3,8 +3,8 @@
  * Handles user watchlist operations
  */
 
-const Watchlist = require('../models/Watchlist.model');
-const Fund = require('../models/Fund.model');
+const Watchlist = require('../../dist/src/models/Watchlist.model');
+const Fund = require('../../dist/src/models/Fund.model');
 const cacheClient = require('../cache/redis.client');
 
 class WatchlistController {

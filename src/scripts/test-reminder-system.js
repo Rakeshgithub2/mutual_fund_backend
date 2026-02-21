@@ -4,7 +4,7 @@
  */
 
 const mongoose = require('mongoose');
-const Reminder = require('../models/Reminder.model');
+const Reminder = require('../../dist/src/models/Reminder.model');
 require('dotenv').config();
 
 async function testReminderSystem() {

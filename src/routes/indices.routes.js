@@ -6,7 +6,7 @@
 
 const express = require('express');
 const router = express.Router();
-const MarketIndices = require('../models/MarketIndices.model');
+const MarketIndices = require('../../dist/src/models/MarketIndices.model');
 
 /**
  * GET /api/indices

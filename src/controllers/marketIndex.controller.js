@@ -3,7 +3,7 @@
  * Handles market indices data
  */
 
-const MarketIndex = require('../models/MarketIndex.model');
+const MarketIndex = require('../../dist/src/models/MarketIndex.model');
 const cacheClient = require('../cache/redis.client');
 const MarketHoursUtil = require('../utils/marketHours.util');
 

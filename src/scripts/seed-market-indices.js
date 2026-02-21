@@ -33,7 +33,7 @@ async function seedMarketIndices() {
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
     // Verify data was saved
-    const MarketIndex = require('../models/MarketIndex.model');
+    const MarketIndex = require('../../dist/src/models/MarketIndex.model');
     const count = await MarketIndex.countDocuments();
     console.log(`✅ Verified: ${count} indices saved to database\n`);
 

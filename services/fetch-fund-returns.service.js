@@ -4,7 +4,7 @@
  */
 
 const axios = require('axios');
-const Fund = require('../src/models/Fund.model');
+const Fund = require('../dist/src/models/Fund.model');
 
 class FundReturnsService {
   constructor() {

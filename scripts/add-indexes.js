@@ -5,8 +5,8 @@
 
 require('dotenv').config();
 const mongoose = require('mongoose');
-const Fund = require('../src/models/Fund.model');
-const MarketIndex = require('../src/models/MarketIndex.model');
+const Fund = require('../dist/src/models/Fund.model');
+const MarketIndex = require('../dist/src/models/MarketIndex.model');
 
 async function addIndexes() {
   try {

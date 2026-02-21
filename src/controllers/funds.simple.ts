@@ -74,7 +74,7 @@ export const getFunds = async (
       const collection = mongodb.getCollection('funds');
 
       const topFunds = await collection
-        .find({ isActive: true })
+        .find({ status: 'Active' })
         .sort({
           'returns.oneYear': -1, // Sort by 1-year returns
           aum: -1, // Then by AUM
@@ -83,18 +83,18 @@ export const getFunds = async (
         .limit(topLimit)
         .toArray();
 
-      const formattedFunds = topFunds.map((fund) => ({
-        id: fund._id || fund.fundId,
-        fundId: fund.fundId,
-        name: fund.name,
+      const formattedFunds = topFunds.map((fund: any) => ({
+        id: fund._id || fund.schemeCode,
+        fundId: fund.schemeCode,
+        name: fund.schemeName,
         category: fund.category,
         subCategory: fund.subCategory,
         fundType: fund.fundType,
-        fundHouse: fund.fundHouse,
-        currentNav: fund.currentNav || 0,
+        fundHouse: fund.amc?.name,
+        currentNav: fund.nav?.value || 0,
         returns: fund.returns || {},
         aum: fund.aum || 0,
-        expenseRatio: fund.expenseRatio || 0,
+        expenseRatio: fund.expenseRatio?.value || fund.expense_ratio || 0,
         riskLevel: fund.riskLevel || 'MEDIUM',
       }));
 
@@ -112,6 +112,20 @@ export const getFunds = async (
     const { skip, take } = pagination(page, limit);
 
     // Build MongoDB query using Fund Model
+    // Safety check for CommonJS circular dependency issues
+    if (!FundModel || typeof FundModel.getInstance !== 'function') {
+      console.error('❌ FundModel is undefined - module initialization error');
+      return res
+        .status(500)
+        .json(
+          formatResponse(
+            null,
+            'Server initialization error - please try again',
+            500
+          )
+        );
+    }
+
     const fundModel = FundModel.getInstance();
 
     let fundsRaw: any[];
@@ -125,7 +139,7 @@ export const getFunds = async (
 
     // Build query filter for counting total
     const collection = mongodb.getCollection('funds');
-    let countFilter: any = { isActive: true };
+    let countFilter: any = { status: 'Active' };
 
     // If query parameter is provided, use search method
     if (query) {
@@ -168,7 +182,7 @@ export const getFunds = async (
           fundsRaw = await collection
             .find({
               subCategory: { $in: equitySubcategories },
-              isActive: true,
+              status: 'Active',
             })
             .sort({ _id: -1 }) // Use indexed field first
             .skip(skip)
@@ -202,24 +216,24 @@ export const getFunds = async (
     }
 
     // Map _id to id for frontend compatibility
-    const funds = fundsRaw.map((fund) => ({
-      id: fund._id || fund.fundId,
-      fundId: fund.fundId,
-      name: fund.name,
+    const funds = fundsRaw.map((fund: any) => ({
+      id: fund._id || fund.schemeCode,
+      fundId: fund.schemeCode,
+      name: fund.schemeName,
       category: fund.category,
       subCategory: fund.subCategory,
       fundType: fund.fundType,
-      fundHouse: fund.fundHouse,
-      currentNav: fund.currentNav,
+      fundHouse: fund.amc?.name,
+      currentNav: fund.nav?.value,
       previousNav: fund.previousNav,
-      navDate: fund.navDate,
+      navDate: fund.nav?.date,
       returns: fund.returns,
       riskMetrics: {
         sharpeRatio: fund.riskMetrics?.sharpeRatio,
         standardDeviation: fund.riskMetrics?.standardDeviation,
       },
       aum: fund.aum,
-      expenseRatio: fund.expenseRatio,
+      expenseRatio: fund.expenseRatio?.value || fund.expense_ratio,
       ratings: fund.ratings,
       popularity: fund.popularity,
     }));
@@ -448,7 +462,7 @@ export const getSuggestions = async (
           { fundHouse: { $regex: `^${query}`, $options: 'i' } }, // Fund house starts with
           { category: { $regex: query, $options: 'i' } }, // Category match
         ],
-        isActive: true,
+        status: 'Active',
       })
       .limit(15) // Increased limit for better suggestions
       .sort({ _id: -1 }) // Use _id to prevent 32MB error
@@ -456,17 +470,17 @@ export const getSuggestions = async (
 
     // Format suggestions for autocomplete
     const suggestions = searchResults.map((fund: any) => ({
-      id: fund._id || fund.fundId,
-      fundId: fund.fundId,
-      name: fund.name,
+      id: fund._id || fund.schemeCode,
+      fundId: fund.schemeCode,
+      name: fund.schemeName,
       category: fund.category,
       subCategory: fund.subCategory,
       fundType: fund.fundType,
-      fundHouse: fund.fundHouse,
-      currentNav: fund.currentNav || 0,
+      fundHouse: fund.amc?.name,
+      currentNav: fund.nav?.value || 0,
       returns: {
-        oneYear: fund.returns?.oneYear || 0,
-        threeYear: fund.returns?.threeYear || 0,
+        oneYear: fund.returns?.['1Y'] || 0,
+        threeYear: fund.returns?.['3Y'] || 0,
       },
       aum: fund.aum || 0,
     }));

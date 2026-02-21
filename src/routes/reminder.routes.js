@@ -5,11 +5,13 @@
 const express = require('express');
 const router = express.Router();
 const ReminderController = require('../controllers/reminder.controller');
-const authMiddleware = require('../middleware/auth.middleware');
+const {
+  authenticateToken,
+} = require('../../dist/src/middleware/auth.middleware');
 const rateLimiter = require('../middleware/rateLimiter.middleware');
 
 // All reminder routes require authentication
-router.use(authMiddleware.verifyToken);
+router.use(authenticateToken);
 
 router.get('/', rateLimiter.apiLimiter, ReminderController.getReminders);
 

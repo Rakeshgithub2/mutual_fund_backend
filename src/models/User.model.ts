@@ -1,5 +1,13 @@
 import { Collection, Filter } from 'mongodb';
-import { mongodb } from '../db/mongodb';
+
+// Lazy import to avoid circular dependency
+let mongodb: any = null;
+function getMongoDB(): any {
+  if (!mongodb) {
+    mongodb = require('../db/mongodb').mongodb;
+  }
+  return mongodb;
+}
 import { User } from '../db/schemas';
 import { z } from 'zod';
 
@@ -85,7 +93,8 @@ export class UserModel {
 
   private get collection(): Collection<User> {
     if (!this._collection) {
-      this._collection = mongodb.getCollection<User>('users');
+      const db = getMongoDB();
+      this._collection = db.getCollection('users') as Collection<User>;
     }
     return this._collection;
   }

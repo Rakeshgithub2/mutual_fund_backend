@@ -45,7 +45,7 @@ const {
   CACHE_KEYS,
   TTL_CONFIG,
 } = require('../src/utils/redisLock.util');
-const MarketIndexHistory = require('../src/models/MarketIndexHistory.model');
+const MarketIndexHistory = require('../dist/src/models/MarketIndexHistory.model');
 
 // Database connection
 const DATABASE_URL = process.env.DATABASE_URL;

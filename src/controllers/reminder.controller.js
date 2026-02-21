@@ -3,8 +3,8 @@
  * Handles user reminders
  */
 
-const Reminder = require('../models/Reminder.model');
-const User = require('../models/User.model');
+const Reminder = require('../../dist/src/models/Reminder.model');
+const User = require('../../dist/src/models/User.model');
 const EmailService = require('../services/email.service');
 
 class ReminderController {

@@ -10,7 +10,7 @@ require('dotenv').config();
 
 const mongoose = require('mongoose');
 const axios = require('axios');
-const Fund = require('../models/Fund.model');
+const Fund = require('../../dist/src/models/Fund.model');
 
 // AMFI NAV URL
 const AMFI_NAV_URL = 'https://www.amfiindia.com/spages/NAVAll.txt';

@@ -1,7 +1,15 @@
 import { Collection, Filter } from 'mongodb';
-import { mongodb } from '../db/mongodb';
 import { Watchlist } from '../db/schemas';
 import { z } from 'zod';
+
+// Lazy import to avoid circular dependency
+let mongodb: any = null;
+function getMongoDB(): any {
+  if (!mongodb) {
+    mongodb = require('../db/mongodb').mongodb;
+  }
+  return mongodb;
+}
 
 /**
  * Zod validation schema for Watchlist
@@ -41,7 +49,10 @@ export class WatchlistModel {
 
   private get collection(): Collection<Watchlist> {
     if (!this._collection) {
-      this._collection = mongodb.getCollection<Watchlist>('watchlists');
+      const db = getMongoDB();
+      this._collection = db.getCollection(
+        'watchlists'
+      ) as Collection<Watchlist>;
     }
     return this._collection;
   }

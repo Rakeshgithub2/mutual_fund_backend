@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mutual Funds API Tester</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 20px;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+        font-size: 2.5em;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .config-box {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .config-box input {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 10px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+
+      .section {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .section h2 {
+        color: #667eea;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+        border-bottom: 2px solid #667eea;
+        padding-bottom: 10px;
+      }
+
+      .endpoint {
+        margin-bottom: 15px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+      }
+
+      .endpoint-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .method {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 12px;
+        margin-right: 10px;
+      }
+
+      .method.get {
+        background: #28a745;
+        color: white;
+      }
+      .method.post {
+        background: #007bff;
+        color: white;
+      }
+      .method.put {
+        background: #ffc107;
+        color: black;
+      }
+      .method.delete {
+        background: #dc3545;
+        color: white;
+      }
+
+      .endpoint-path {
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+        color: #555;
+        flex-grow: 1;
+        word-break: break-all;
+      }
+
+      button {
+        padding: 8px 16px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        transition: background 0.3s;
+      }
+
+      button:hover {
+        background: #5568d3;
+      }
+
+      button:active {
+        transform: scale(0.98);
+      }
+
+      .response-box {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 20px;
+      }
+
+      .response-box h2 {
+        color: #667eea;
+        margin-bottom: 15px;
+      }
+
+      .response-content {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 15px;
+        border-radius: 5px;
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+        max-height: 500px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+
+      .loading {
+        color: #ffc107;
+        font-weight: bold;
+      }
+
+      .success {
+        color: #28a745;
+      }
+
+      .error {
+        color: #dc3545;
+      }
+
+      .input-group {
+        margin-top: 10px;
+      }
+
+      .input-group input,
+      .input-group textarea {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+
+      .input-group label {
+        font-size: 12px;
+        color: #666;
+        font-weight: bold;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+
+      .tab {
+        padding: 10px 20px;
+        background: #e0e0e0;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      .tab.active {
+        background: #667eea;
+        color: white;
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 Mutual Funds API Tester</h1>
+
+      <div class="config-box">
+        <label><strong>Base URL:</strong></label>
+        <input
+          type="text"
+          id="baseUrl"
+          value="http://13.60.156.3:3002"
+          placeholder="http://13.60.156.3:3002"
+        />
+
+        <label><strong>Auth Token (Optional):</strong></label>
+        <input
+          type="text"
+          id="authToken"
+          placeholder="Paste JWT token for authenticated endpoints"
+        />
+
+        <label><strong>User ID (for testing):</strong></label>
+        <input
+          type="text"
+          id="userId"
+          placeholder="Enter user ID for portfolio/watchlist tests"
+        />
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" onclick="showTab('basic')">Basic</button>
+        <button class="tab" onclick="showTab('auth')">Auth</button>
+        <button class="tab" onclick="showTab('funds')">Funds</button>
+        <button class="tab" onclick="showTab('portfolio')">Portfolio</button>
+        <button class="tab" onclick="showTab('compare')">Compare</button>
+        <button class="tab" onclick="showTab('advanced')">Advanced</button>
+      </div>
+
+      <!-- Basic Tab -->
+      <div id="basic-tab" class="tab-content active">
+        <div class="grid">
+          <div class="section">
+            <h2>🏥 Health & Status</h2>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method get">GET</span>
+                  <span class="endpoint-path">/health</span>
+                </div>
+                <button onclick="testEndpoint('GET', '/health')">Test</button>
+              </div>
+            </div>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method get">GET</span>
+                  <span class="endpoint-path">/api/test</span>
+                </div>
+                <button onclick="testEndpoint('GET', '/api/test')">Test</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>💰 Quick Fund Tests</h2>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method get">GET</span>
+                  <span class="endpoint-path">/api/funds?limit=5</span>
+                </div>
+                <button onclick="testEndpoint('GET', '/api/funds?limit=5')">
+                  Test
+                </button>
+              </div>
+            </div>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method get">GET</span>
+                  <span class="endpoint-path"
+                    >/api/funds?query=hdfc&limit=5</span
+                  >
+                </div>
+                <button
+                  onclick="testEndpoint('GET', '/api/funds?query=hdfc&limit=5')"
+                >
+                  Test HDFC
+                </button>
+              </div>
+            </div>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method get">GET</span>
+                  <span class="endpoint-path"
+                    >/api/funds?query=icici&limit=5</span
+                  >
+                </div>
+                <button
+                  onclick="testEndpoint('GET', '/api/funds?query=icici&limit=5')"
+                >
+                  Test ICICI
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Auth Tab -->
+      <div id="auth-tab" class="tab-content">
+        <div class="grid">
+          <div class="section">
+            <h2>🔐 Authentication</h2>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method post">POST</span>
+                  <span class="endpoint-path">/api/auth/register</span>
+                </div>
+                <button onclick="testRegister()">Test</button>
+              </div>
+              <div class="input-group">
+                <label>Email:</label>
+                <input
+                  type="email"
+                  id="regEmail"
+                  placeholder="test@example.com"
+                />
+              </div>
+              <div class="input-group">
+                <label>Password:</label>
+                <input
+                  type="password"
+                  id="regPassword"
+                  placeholder="Test123!"
+                />
+              </div>
+              <div class="input-group">
+                <label>Name:</label>
+                <input type="text" id="regName" placeholder="Test User" />
+              </div>
+            </div>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method post">POST</span>
+                  <span class="endpoint-path">/api/auth/login</span>
+                </div>
+                <button onclick="testLogin()">Test</button>
+              </div>
+              <div class="input-group">
+                <label>Email:</label>
+                <input
+                  type="email"
+                  id="loginEmail"
+                  placeholder="test@example.com"
+                />
+              </div>
+              <div class="input-group">
+                <label>Password:</label>
+                <input
+                  type="password"
+                  id="loginPassword"
+                  placeholder="Test123!"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Funds Tab -->
+      <div id="funds-tab" class="tab-content">
+        <div class="grid">
+          <div class="section">
+            <h2>💰 Funds - Category Filter</h2>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method get">GET</span>
+                  <span class="endpoint-path"
+                    >/api/funds?category=equity&limit=10</span
+                  >
+                </div>
+                <button
+                  onclick="testEndpoint('GET', '/api/funds?category=equity&limit=10')"
+                >
+                  Equity
+                </button>
+              </div>
+            </div>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method get">GET</span>
+                  <span class="endpoint-path"
+                    >/api/funds?category=debt&limit=10</span
+                  >
+                </div>
+                <button
+                  onclick="testEndpoint('GET', '/api/funds?category=debt&limit=10')"
+                >
+                  Debt
+                </button>
+              </div>
+            </div>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method get">GET</span>
+                  <span class="endpoint-path"
+                    >/api/funds?category=hybrid&limit=10</span
+                  >
+                </div>
+                <button
+                  onclick="testEndpoint('GET', '/api/funds?category=hybrid&limit=10')"
+                >
+                  Hybrid
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>🎯 Top Funds</h2>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method get">GET</span>
+                  <span class="endpoint-path">/api/funds?top=20</span>
+                </div>
+                <button onclick="testEndpoint('GET', '/api/funds?top=20')">
+                  Top 20
+                </button>
+              </div>
+            </div>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method get">GET</span>
+                  <span class="endpoint-path">/api/rankings/top?limit=10</span>
+                </div>
+                <button
+                  onclick="testEndpoint('GET', '/api/rankings/top?limit=10')"
+                >
+                  Rankings
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio Tab -->
+      <div id="portfolio-tab" class="tab-content">
+        <div class="grid">
+          <div class="section">
+            <h2>📊 Portfolio</h2>
+            <p style="color: #dc3545; margin-bottom: 10px">
+              <small>⚠️ Requires Auth Token & User ID</small>
+            </p>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method get">GET</span>
+                  <span class="endpoint-path">/api/portfolio/:userId</span>
+                </div>
+                <button onclick="testPortfolio()">Get Portfolio</button>
+              </div>
+            </div>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method get">GET</span>
+                  <span class="endpoint-path">/api/watchlist/:userId</span>
+                </div>
+                <button onclick="testWatchlist()">Get Watchlist</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>📈 Market Data</h2>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method get">GET</span>
+                  <span class="endpoint-path">/api/market-indices</span>
+                </div>
+                <button onclick="testEndpoint('GET', '/api/market-indices')">
+                  Indices
+                </button>
+              </div>
+            </div>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method get">GET</span>
+                  <span class="endpoint-path">/api/news?limit=5</span>
+                </div>
+                <button onclick="testEndpoint('GET', '/api/news?limit=5')">
+                  News
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compare Tab -->
+      <div id="compare-tab" class="tab-content">
+        <div class="grid">
+          <div class="section">
+            <h2>🔄 Comparison & Analysis</h2>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method post">POST</span>
+                  <span class="endpoint-path">/api/comparison/compare</span>
+                </div>
+                <button onclick="testCompare()">Compare</button>
+              </div>
+              <div class="input-group">
+                <label>Fund IDs (comma-separated):</label>
+                <input
+                  type="text"
+                  id="compareFunds"
+                  placeholder="119551,119552,119553"
+                />
+              </div>
+            </div>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method post">POST</span>
+                  <span class="endpoint-path">/api/comparison/overlap</span>
+                </div>
+                <button onclick="testOverlap()">Overlap</button>
+              </div>
+              <div class="input-group">
+                <label>Fund IDs (comma-separated):</label>
+                <input
+                  type="text"
+                  id="overlapFunds"
+                  placeholder="119551,119552"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>🧮 Calculators</h2>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method post">POST</span>
+                  <span class="endpoint-path">/api/calculator/sip</span>
+                </div>
+                <button onclick="testSIPCalculator()">SIP Calc</button>
+              </div>
+              <div class="input-group">
+                <input
+                  type="number"
+                  id="sipAmount"
+                  placeholder="Monthly: 5000"
+                  value="5000"
+                />
+                <input
+                  type="number"
+                  id="sipReturn"
+                  placeholder="Return %: 12"
+                  value="12"
+                />
+                <input
+                  type="number"
+                  id="sipYears"
+                  placeholder="Years: 10"
+                  value="10"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Advanced Tab -->
+      <div id="advanced-tab" class="tab-content">
+        <div class="grid">
+          <div class="section">
+            <h2>🔍 Search & Suggestions</h2>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method get">GET</span>
+                  <span class="endpoint-path">/api/suggest?q=hdfc</span>
+                </div>
+                <button onclick="testEndpoint('GET', '/api/suggest?q=hdfc')">
+                  Autocomplete
+                </button>
+              </div>
+            </div>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method get">GET</span>
+                  <span class="endpoint-path">/api/search?q=large%20cap</span>
+                </div>
+                <button
+                  onclick="testEndpoint('GET', '/api/search?q=large%20cap')"
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>🤖 AI & Knowledge</h2>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <div>
+                  <span class="method get">GET</span>
+                  <span class="endpoint-path">/api/ai/suggestions</span>
+                </div>
+                <button onclick="testEndpoint('GET', '/api/ai/suggestions')">
+                  AI Suggest
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="response-box">
+        <h2>📡 Response</h2>
+        <div id="response" class="response-content">
+          Click any "Test" button to see API response here...
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function getBaseUrl() {
+        return document.getElementById('baseUrl').value;
+      }
+
+      function getAuthToken() {
+        return document.getElementById('authToken').value;
+      }
+
+      function getUserId() {
+        return document.getElementById('userId').value;
+      }
+
+      function showTab(tabName) {
+        // Hide all tabs
+        document.querySelectorAll('.tab-content').forEach((tab) => {
+          tab.classList.remove('active');
+        });
+        document.querySelectorAll('.tab').forEach((tab) => {
+          tab.classList.remove('active');
+        });
+
+        // Show selected tab
+        document.getElementById(tabName + '-tab').classList.add('active');
+        event.target.classList.add('active');
+      }
+
+      async function testEndpoint(method, path, body = null) {
+        const responseDiv = document.getElementById('response');
+        const url = getBaseUrl() + path;
+
+        responseDiv.innerHTML = `<span class="loading">⏳ Loading...</span>\n\nRequest: ${method} ${url}`;
+
+        try {
+          const options = {
+            method: method,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          };
+
+          const token = getAuthToken();
+          if (token) {
+            options.headers['Authorization'] = `Bearer ${token}`;
+          }
+
+          if (body) {
+            options.body = JSON.stringify(body);
+          }
+
+          const response = await fetch(url, options);
+          const data = await response.json();
+
+          const statusClass = response.ok ? 'success' : 'error';
+          responseDiv.innerHTML =
+            `<span class="${statusClass}">● ${response.status} ${response.statusText}</span>\n\n` +
+            JSON.stringify(data, null, 2);
+        } catch (error) {
+          responseDiv.innerHTML = `<span class="error">❌ Error:</span>\n\n${error.message}`;
+        }
+      }
+
+      function testRegister() {
+        const email = document.getElementById('regEmail').value;
+        const password = document.getElementById('regPassword').value;
+        const name = document.getElementById('regName').value;
+
+        if (!email || !password || !name) {
+          alert('Please fill all registration fields');
+          return;
+        }
+
+        testEndpoint('POST', '/api/auth/register', { email, password, name });
+      }
+
+      function testLogin() {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+
+        if (!email || !password) {
+          alert('Please fill all login fields');
+          return;
+        }
+
+        testEndpoint('POST', '/api/auth/login', { email, password });
+      }
+
+      function testPortfolio() {
+        const userId = getUserId();
+        if (!userId) {
+          alert('Please enter User ID in config box');
+          return;
+        }
+        testEndpoint('GET', `/api/portfolio/${userId}`);
+      }
+
+      function testWatchlist() {
+        const userId = getUserId();
+        if (!userId) {
+          alert('Please enter User ID in config box');
+          return;
+        }
+        testEndpoint('GET', `/api/watchlist/${userId}`);
+      }
+
+      function testCompare() {
+        const fundIds = document
+          .getElementById('compareFunds')
+          .value.split(',')
+          .map((id) => id.trim());
+        if (fundIds.length < 2) {
+          alert('Please enter at least 2 fund IDs');
+          return;
+        }
+        testEndpoint('POST', '/api/comparison/compare', { fundIds });
+      }
+
+      function testOverlap() {
+        const fundIds = document
+          .getElementById('overlapFunds')
+          .value.split(',')
+          .map((id) => id.trim());
+        if (fundIds.length < 2) {
+          alert('Please enter at least 2 fund IDs');
+          return;
+        }
+        testEndpoint('POST', '/api/comparison/overlap', { fundIds });
+      }
+
+      function testSIPCalculator() {
+        const monthlyInvestment = parseInt(
+          document.getElementById('sipAmount').value
+        );
+        const expectedReturn = parseInt(
+          document.getElementById('sipReturn').value
+        );
+        const timePeriod = parseInt(document.getElementById('sipYears').value);
+
+        testEndpoint('POST', '/api/calculator/sip', {
+          monthlyInvestment,
+          expectedReturn,
+          timePeriod,
+        });
+      }
+    </script>
+  </body>
+</html>

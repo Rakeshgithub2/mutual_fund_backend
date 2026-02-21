@@ -1,5 +1,13 @@
 import { Collection, ObjectId } from 'mongodb';
-import { mongodb } from '../db/mongodb';
+
+// Lazy import to avoid circular dependency
+let mongodb: any = null;
+function getMongoDB(): any {
+  if (!mongodb) {
+    mongodb = require('../db/mongodb').mongodb;
+  }
+  return mongodb;
+}
 import { z } from 'zod';
 
 /**
@@ -49,7 +57,8 @@ export class FeedbackModel {
 
   private get collection(): Collection<Feedback> {
     if (!this._collection) {
-      this._collection = mongodb.getCollection<Feedback>('feedback');
+      const db = getMongoDB();
+      this._collection = db.getCollection('feedback') as Collection<Feedback>;
     }
     return this._collection;
   }

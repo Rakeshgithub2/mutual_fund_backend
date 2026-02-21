@@ -4,7 +4,7 @@
  * Never shows "not found" - always fetches from API if not in DB
  */
 
-const Fund = require('../models/Fund.model');
+const Fund = require('../../dist/src/models/Fund.model');
 const axios = require('axios');
 
 class DynamicFundSearchService {

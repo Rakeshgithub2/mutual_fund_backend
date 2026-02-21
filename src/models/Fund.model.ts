@@ -1,7 +1,15 @@
 import { Collection, Filter, UpdateFilter, Document } from 'mongodb';
-import { mongodb } from '../db/mongodb';
 import { Fund } from '../db/schemas';
 import { z } from 'zod';
+
+// Lazy import to avoid circular dependency
+let mongodb: any = null;
+function getMongoDB(): any {
+  if (!mongodb) {
+    mongodb = require('../db/mongodb').mongodb;
+  }
+  return mongodb;
+}
 
 /**
  * Zod validation schema for Fund
@@ -141,7 +149,13 @@ export class FundModel {
    */
   private get collection(): Collection<Fund> {
     if (!this._collection) {
-      this._collection = mongodb.getCollection<Fund>('funds');
+      const db = getMongoDB();
+      if (!db || typeof db.getCollection !== 'function') {
+        throw new Error(
+          '[FundModel] MongoDB instance not initialized. Ensure mongodb.connect() was called.'
+        );
+      }
+      this._collection = db.getCollection('funds') as Collection<Fund>;
     }
     return this._collection;
   }
@@ -312,7 +326,7 @@ export class FundModel {
   ): Promise<Fund[]> {
     const filter: Filter<Fund> = {
       $text: { $search: query },
-      isActive: true,
+      status: 'Active' as any,
     };
 
     if (options.category) {
@@ -345,7 +359,7 @@ export class FundModel {
   ): Promise<Fund[]> {
     const query: Filter<Fund> = {
       category: category as any,
-      isActive: true,
+      status: 'Active' as any,
     };
 
     // Enforce zero-NA policy only if explicitly enabled
@@ -383,7 +397,7 @@ export class FundModel {
     const query: Filter<Fund> = {
       category: category as any,
       subCategory: { $in: subcategories } as any,
-      isActive: true,
+      status: 'Active' as any,
     };
 
     // Enforce zero-NA policy only if explicitly enabled
@@ -427,7 +441,7 @@ export class FundModel {
   ): Promise<Fund[]> {
     const query: Filter<Fund> = {
       subCategory: subCategory as any,
-      isActive: true,
+      status: 'Active' as any,
     };
 
     // Enforce zero-NA policy only if explicitly enabled
@@ -457,7 +471,7 @@ export class FundModel {
   ): Promise<Fund[]> {
     // CRITICAL: Use _id instead of returns (unindexed) to prevent 32MB error
     return await this.collection
-      .find({ isActive: true })
+      .find({ status: 'Active' as any })
       .sort({ _id: -1 })
       .limit(limit)
       .toArray();
@@ -469,7 +483,7 @@ export class FundModel {
   async findByFundHouse(fundHouse: string): Promise<Fund[]> {
     // CRITICAL: Use _id instead of aum (unindexed) to prevent 32MB error
     return await this.collection
-      .find({ fundHouse, isActive: true })
+      .find({ fundHouse, status: 'Active' as any })
       .sort({ _id: -1 })
       .limit(200) // Add limit for safety
       .toArray();
@@ -480,7 +494,7 @@ export class FundModel {
    */
   async findByManager(fundManagerId: string): Promise<Fund[]> {
     return await this.collection
-      .find({ fundManagerId, isActive: true })
+      .find({ fundManagerId, status: 'Active' })
       .sort({ _id: -1 }) // Use _id to prevent 32MB error
       .toArray();
   }
@@ -506,7 +520,7 @@ export class FundModel {
   async countByCategory(): Promise<Array<{ category: string; count: number }>> {
     return (await this.collection
       .aggregate([
-        { $match: { isActive: true } },
+        { $match: { status: 'Active' } },
         { $group: { _id: '$category', count: { $sum: 1 } } },
         { $project: { category: '$_id', count: 1, _id: 0 } },
       ])
@@ -523,7 +537,7 @@ export class FundModel {
       sortBy?: string;
     } = {}
   ): Promise<Fund[]> {
-    const query: Filter<Fund> = { isActive: true };
+    const query: Filter<Fund> = { status: 'Active' as any };
 
     // CRITICAL: Use ONLY _id for sorting (always indexed, prevents 32MB error)
     const sort: any = { _id: -1 };

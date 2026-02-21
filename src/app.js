@@ -22,12 +22,12 @@ const marketIndexJob = require('./jobs/marketIndex.job');
 const reminderJob = require('./jobs/reminder.job');
 
 // Import middleware
-const AuthMiddleware = require('./middleware/auth.middleware');
+const AuthMiddleware = require('../dist/src/middleware/auth.middleware');
 const RateLimiterMiddleware = require('./middleware/rateLimiter.middleware');
 
 // Import routes
-const authRoutes = require('./routes/auth.routes');
-const fundRoutes = require('./routes/fund.routes');
+const authRoutes = require('../dist/src/routes/auth.routes').default;
+const fundRoutes = require('../dist/src/routes/fund.routes').default;
 const marketIndexRoutes = require('./routes/marketIndex.routes');
 const marketHistoryRoutes = require('./routes/market-history.routes');
 const marketProductionRoutes = require('./routes/market.production.routes'); // Production-grade cached routes
@@ -37,7 +37,7 @@ const reminderRoutes = require('./routes/reminder.routes');
 const newsRoutes = require('./routes/news.routes');
 const indicesRoutes = require('./routes/indices.routes');
 const aiRoutes = require('./routes/ai.routes');
-const searchRoutes = require('./routes/search.routes');
+const searchRoutes = require('../dist/src/routes/search.routes').default;
 // const holdingsRoutes = require('./routes/holdings.routes'); // TypeScript file - needs compilation
 
 const app = express();
@@ -236,9 +236,13 @@ async function startServer() {
   try {
     console.log('\n🚀 Starting Mutual Funds Backend...\n');
 
-    // Step 1: Connect to MongoDB
+    // Step 1: Connect to MongoDB (both Mongoose and native driver)
     console.log('📊 Connecting to MongoDB Atlas...');
     await dbConfig.connect();
+
+    // Also initialize native MongoDB driver for TypeScript routes
+    const { mongodb } = require('../dist/src/db/mongodb');
+    await mongodb.connect();
 
     // Step 2: Create database indexes
     console.log('📊 Creating database indexes...');

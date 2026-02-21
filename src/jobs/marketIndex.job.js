@@ -3,7 +3,7 @@
  * Updates market indices every 2 hours during market hours
  */
 
-const MarketIndex = require('../models/MarketIndex.model');
+const MarketIndex = require('../../dist/src/models/MarketIndex.model');
 const cacheClient = require('../cache/redis.client');
 const MarketHoursUtil = require('../utils/marketHours.util');
 const DateUtil = require('../utils/date.util');

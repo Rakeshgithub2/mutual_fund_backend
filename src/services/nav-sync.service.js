@@ -6,8 +6,8 @@
 
 const cron = require('node-cron');
 const axios = require('axios');
-const FundStaticMaster = require('../models/FundStaticMaster.model');
-const FundNavDaily = require('../models/FundNavDaily.model');
+const FundStaticMaster = require('../../dist/src/models/FundStaticMaster.model');
+const FundNavDaily = require('../../dist/src/models/FundNavDaily.model');
 const { redisCache } = require('./redis.service');
 const { isMarketHoliday, getLastTradingDay } = require('../utils/market.utils');
 

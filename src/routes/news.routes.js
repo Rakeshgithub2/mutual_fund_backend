@@ -6,7 +6,7 @@
 
 const express = require('express');
 const router = express.Router();
-const MarketNews = require('../models/MarketNews.model');
+const MarketNews = require('../../dist/src/models/MarketNews.model');
 
 /**
  * GET /api/news

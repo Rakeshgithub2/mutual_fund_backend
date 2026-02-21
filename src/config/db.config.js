@@ -125,14 +125,14 @@ class DatabaseConfig {
       console.log('📊 Creating database indexes...');
 
       // Import all models to ensure they're registered
-      require('../models/User.model');
-      require('../models/Fund.model');
-      require('../models/FundNav.model');
-      require('../models/FundHolding.model');
-      require('../models/MarketIndex.model');
-      require('../models/Watchlist.model');
-      require('../models/Goal.model');
-      require('../models/Reminder.model');
+      require('../../dist/src/models/User.model');
+      require('../../dist/src/models/Fund.model');
+      require('../../dist/src/models/FundNav.model');
+      require('../../dist/src/models/FundHolding.model');
+      require('../../dist/src/models/MarketIndex.model');
+      require('../../dist/src/models/Watchlist.model');
+      require('../../dist/src/models/Goal.model');
+      require('../../dist/src/models/Reminder.model');
 
       // Sync indexes for all models
       await Promise.all(

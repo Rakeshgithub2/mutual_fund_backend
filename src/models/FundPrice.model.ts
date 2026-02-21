@@ -1,7 +1,15 @@
 import { Collection, Filter } from 'mongodb';
-import { mongodb } from '../db/mongodb';
 import { FundPrice } from '../db/schemas';
 import { z } from 'zod';
+
+// Lazy import to avoid circular dependency
+let mongodb: any = null;
+function getMongoDB(): any {
+  if (!mongodb) {
+    mongodb = require('../db/mongodb').mongodb;
+  }
+  return mongodb;
+}
 
 /**
  * Zod validation schema for FundPrice
@@ -35,7 +43,10 @@ export class FundPriceModel {
 
   private get collection(): Collection<FundPrice> {
     if (!this._collection) {
-      this._collection = mongodb.getCollection<FundPrice>('fundPrices');
+      const db = getMongoDB();
+      this._collection = db.getCollection(
+        'fundPrices'
+      ) as Collection<FundPrice>;
     }
     return this._collection;
   }

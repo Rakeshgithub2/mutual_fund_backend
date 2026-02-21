@@ -26,9 +26,9 @@ const OldFundSchema = new mongoose.Schema(
 const OldFund = mongoose.model('OldFund', OldFundSchema);
 
 // New schemas
-const FundStaticMaster = require('../src/models/FundStaticMaster.model');
-const FundPeriodicReturns = require('../src/models/FundPeriodicReturns.model');
-const FundNavDaily = require('../src/models/FundNavDaily.model');
+const FundStaticMaster = require('../dist/src/models/FundStaticMaster.model');
+const FundPeriodicReturns = require('../dist/src/models/FundPeriodicReturns.model');
+const FundNavDaily = require('../dist/src/models/FundNavDaily.model');
 
 class DataMigration {
   constructor() {

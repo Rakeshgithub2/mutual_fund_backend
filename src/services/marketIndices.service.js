@@ -10,7 +10,7 @@
  */
 
 const axios = require('axios');
-const MarketIndex = require('../models/MarketIndex.model');
+const MarketIndex = require('../../dist/src/models/MarketIndex.model');
 
 class MarketIndicesService {
   constructor() {

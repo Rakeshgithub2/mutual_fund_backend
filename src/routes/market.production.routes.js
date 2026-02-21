@@ -21,7 +21,7 @@ const Redis = require('ioredis');
 
 const MarketHours = require('../utils/marketHours.production');
 const { CACHE_KEYS, TTL_CONFIG } = require('../utils/redisLock.util');
-const MarketIndexHistory = require('../models/MarketIndexHistory.model');
+const MarketIndexHistory = require('../../dist/src/models/MarketIndexHistory.model');
 
 // Redis client (lazy initialization)
 let redis = null;

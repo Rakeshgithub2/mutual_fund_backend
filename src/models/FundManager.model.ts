@@ -1,7 +1,15 @@
 import { Collection, Filter, ObjectId } from 'mongodb';
-import { mongodb } from '../db/mongodb';
 import { FundManager } from '../db/schemas';
 import { z } from 'zod';
+
+// Lazy import to avoid circular dependency
+let mongodb: any = null;
+function getMongoDB(): any {
+  if (!mongodb) {
+    mongodb = require('../db/mongodb').mongodb;
+  }
+  return mongodb;
+}
 
 /**
  * Zod validation schema for FundManager
@@ -80,7 +88,15 @@ export class FundManagerModel {
    */
   private get collection(): Collection<FundManager> {
     if (!this._collection) {
-      this._collection = mongodb.getCollection<FundManager>('fundManagers');
+      const db = getMongoDB();
+      if (!db || typeof db.getCollection !== 'function') {
+        throw new Error(
+          '[FundManagerModel] MongoDB instance not initialized. Ensure mongodb.connect() was called.'
+        );
+      }
+      this._collection = db.getCollection(
+        'fundManagers'
+      ) as Collection<FundManager>;
     }
     return this._collection;
   }

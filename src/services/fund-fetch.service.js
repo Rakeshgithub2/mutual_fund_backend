@@ -3,10 +3,10 @@
  * Smart fetch logic: Check MongoDB → Check Redis → Fetch External API → Cache
  */
 
-const FundStaticMaster = require('../models/FundStaticMaster.model');
-const FundPeriodicReturns = require('../models/FundPeriodicReturns.model');
-const FundNavDaily = require('../models/FundNavDaily.model');
-const MarketIndicesHourly = require('../models/MarketIndicesHourly.model');
+const FundStaticMaster = require('../../dist/src/models/FundStaticMaster.model');
+const FundPeriodicReturns = require('../../dist/src/models/FundPeriodicReturns.model');
+const FundNavDaily = require('../../dist/src/models/FundNavDaily.model');
+const MarketIndicesHourly = require('../../dist/src/models/MarketIndicesHourly.model');
 const { redisCache } = require('./redis.service');
 const { isMarketHoliday, getLastTradingDay } = require('../utils/market.utils');
 const axios = require('axios');

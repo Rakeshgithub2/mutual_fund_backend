@@ -1,7 +1,15 @@
 import { Collection, Filter } from 'mongodb';
-import { mongodb } from '../db/mongodb';
 import { Goal } from '../db/schemas';
 import { z } from 'zod';
+
+// Lazy import to avoid circular dependency
+let mongodb: any = null;
+function getMongoDB(): any {
+  if (!mongodb) {
+    mongodb = require('../db/mongodb').mongodb;
+  }
+  return mongodb;
+}
 
 /**
  * Zod validation schema for Goal
@@ -54,7 +62,8 @@ export class GoalModel {
 
   private get collection(): Collection<Goal> {
     if (!this._collection) {
-      this._collection = mongodb.getCollection<Goal>('goals');
+      const db = getMongoDB();
+      this._collection = db.getCollection('goals') as Collection<Goal>;
     }
     return this._collection;
   }

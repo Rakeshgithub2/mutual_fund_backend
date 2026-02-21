@@ -3,9 +3,9 @@
  * Handles all fund-related operations with caching
  */
 
-const Fund = require('../models/Fund.model');
-const FundNav = require('../models/FundNav.model');
-const FundHolding = require('../models/FundHolding.model');
+const Fund = require('../../dist/src/models/Fund.model');
+const FundNav = require('../../dist/src/models/FundNav.model');
+const FundHolding = require('../../dist/src/models/FundHolding.model');
 const cacheClient = require('../cache/redis.client');
 const PaginationUtil = require('../utils/pagination.util');
 const DateUtil = require('../utils/date.util');

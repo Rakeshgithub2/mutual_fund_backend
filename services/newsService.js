@@ -320,7 +320,7 @@ const storeTranslations = async (articles) => {
 const getNews = async (language = 'english') => {
   try {
     const db = mongodb.db;
-    const MarketNews = require('../src/models/MarketNews.model');
+    const MarketNews = require('../dist/src/models/MarketNews.model');
 
     // Get latest news from MarketNews collection
     const articles = await MarketNews.find()

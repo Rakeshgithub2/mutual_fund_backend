@@ -5,7 +5,7 @@
 
 require('dotenv').config();
 const mongoose = require('mongoose');
-const MarketNews = require('../src/models/MarketNews.model');
+const MarketNews = require('../dist/src/models/MarketNews.model');
 
 const DATABASE_URL = process.env.DATABASE_URL;
 

@@ -17,7 +17,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const Redis = require('ioredis');
 
-const MarketIndexHistory = require('../models/MarketIndexHistory.model');
+const MarketIndexHistory = require('../../dist/src/models/MarketIndexHistory.model');
 const MarketHours = require('../utils/marketHours.production');
 const { CACHE_KEYS, TTL_CONFIG } = require('../utils/redisLock.util');
 

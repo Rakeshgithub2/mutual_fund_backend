@@ -201,4 +201,13 @@ class MongoDB {
   }
 }
 
+// Export class and helper function to avoid initialization order issues
+export { MongoDB };
+
+// Helper function to get singleton instance (safer than direct export)
+export function getMongoDBInstance(): MongoDB {
+  return MongoDB.getInstance();
+}
+
+// Maintain backward compatibility
 export const mongodb = MongoDB.getInstance();

@@ -6,7 +6,7 @@
 
 const cron = require('node-cron');
 const axios = require('axios');
-const MarketIndicesHourly = require('../models/MarketIndicesHourly.model');
+const MarketIndicesHourly = require('../../dist/src/models/MarketIndicesHourly.model');
 const { redisCache } = require('./redis.service');
 const { isMarketHoliday, isTradingHours } = require('../utils/market.utils');
 

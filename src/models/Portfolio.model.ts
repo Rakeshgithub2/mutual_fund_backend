@@ -1,7 +1,15 @@
 import { Collection, Filter } from 'mongodb';
-import { mongodb } from '../db/mongodb';
 import { Portfolio } from '../db/schemas';
 import { z } from 'zod';
+
+// Lazy import to avoid circular dependency
+let mongodb: any = null;
+function getMongoDB(): any {
+  if (!mongodb) {
+    mongodb = require('../db/mongodb').mongodb;
+  }
+  return mongodb;
+}
 
 /**
  * Zod validation schema for Portfolio
@@ -92,7 +100,10 @@ export class PortfolioModel {
 
   private get collection(): Collection<Portfolio> {
     if (!this._collection) {
-      this._collection = mongodb.getCollection<Portfolio>('portfolios');
+      const db = getMongoDB();
+      this._collection = db.getCollection(
+        'portfolios'
+      ) as Collection<Portfolio>;
     }
     return this._collection;
   }

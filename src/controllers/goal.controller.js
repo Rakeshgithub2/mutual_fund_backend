@@ -3,7 +3,7 @@
  * Handles user investment goals
  */
 
-const Goal = require('../models/Goal.model');
+const Goal = require('../../dist/src/models/Goal.model');
 const cacheClient = require('../cache/redis.client');
 
 class GoalController {

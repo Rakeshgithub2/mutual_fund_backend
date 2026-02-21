@@ -3,8 +3,8 @@
  * Updates NAV for all funds every day at 9:30 PM IST
  */
 
-const FundNav = require('../models/FundNav.model');
-const Fund = require('../models/Fund.model');
+const FundNav = require('../../dist/src/models/FundNav.model');
+const Fund = require('../../dist/src/models/Fund.model');
 const cacheClient = require('../cache/redis.client');
 const DateUtil = require('../utils/date.util');
 const axios = require('axios');

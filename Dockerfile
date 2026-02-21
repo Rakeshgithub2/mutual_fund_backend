@@ -1,7 +1,7 @@
-# Multi-stage Dockerfile for Node.js TypeScript application
+# Multi-stage Dockerfile for Node.js TypeScript Backend
 
 # Base stage with Node.js
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 WORKDIR /app
 
 # Install dependencies and build tools
@@ -18,8 +18,8 @@ COPY package*.json pnpm-lock.yaml* ./
 FROM base AS development
 ENV NODE_ENV=development
 
-# Install all dependencies (including dev dependencies)
-RUN npm install -g pnpm && \
+# Install pnpm and all dependencies
+RUN corepack enable pnpm && \
     pnpm install --frozen-lockfile
 
 # Copy source code
@@ -35,11 +35,11 @@ CMD ["pnpm", "run", "dev"]
 FROM development AS build
 ENV NODE_ENV=production
 
-# Build the application
+# Build the TypeScript application
 RUN pnpm run build
 
 # Production stage
-FROM node:18-alpine AS production
+FROM node:20-alpine AS production
 WORKDIR /app
 
 # Install curl for health checks
@@ -49,24 +49,27 @@ RUN apk add --no-cache curl
 COPY package*.json pnpm-lock.yaml* ./
 
 # Install only production dependencies
-RUN npm install -g pnpm && \
+RUN corepack enable pnpm && \
     pnpm install --frozen-lockfile --prod
 
-# Copy built application and Prisma schema
+# Copy built application and necessary files
+COPY --from=build /app/src ./src
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/prisma ./prisma
 COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma
 
 # Create logs directory
 RUN mkdir -p logs && \
-    chown -R node:node /app
+    addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001 && \
+    chown -R nodejs:nodejs /app
 
 # Switch to non-root user
-USER node
+USER nodejs
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:3000/health || exit 1
+    CMD curl -f http://localhost:3000/api/health || exit 1
 
 # Expose port
 EXPOSE 3000

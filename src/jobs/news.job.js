@@ -6,7 +6,7 @@
  */
 
 const axios = require('axios');
-const MarketNews = require('../models/MarketNews.model');
+const MarketNews = require('../../dist/src/models/MarketNews.model');
 
 class NewsUpdateJob {
   constructor() {
