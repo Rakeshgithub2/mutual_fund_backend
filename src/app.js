@@ -17,8 +17,8 @@ const schedulerUtil = require('./utils/scheduler.util');
 const masterCronScheduler = require('../cron/scheduler'); // Master cron scheduler for 15K+ funds
 
 // Import jobs
-const dailyNavJob = require('./jobs/dailyNav.job');
-const marketIndexJob = require('./jobs/marketIndex.job');
+// DISABLED: Missing models - const dailyNavJob = require('./jobs/dailyNav.job');
+// DISABLED: Missing models - const marketIndexJob = require('./jobs/marketIndex.job');
 const reminderJob = require('./jobs/reminder.job');
 
 // Import middleware
@@ -199,19 +199,19 @@ function setupScheduler() {
   // Legacy cron jobs (for backward compatibility)
   console.log('\n📅 Setting up legacy cron jobs...\n');
 
-  // Daily NAV update @ 9:30 PM IST
-  schedulerUtil.scheduleJob(
-    'dailyNav',
-    schedulerUtil.constructor.CRON_EXPRESSIONS.DAILY_9_30_PM,
-    () => dailyNavJob.execute()
-  );
+  // DISABLED: Missing models - Daily NAV update @ 9:30 PM IST
+  // schedulerUtil.scheduleJob(
+  //   'dailyNav',
+  //   schedulerUtil.constructor.CRON_EXPRESSIONS.DAILY_9_30_PM,
+  //   () => dailyNavJob.execute()
+  // );
 
-  // Market indices update every 2 hours (market hours only)
-  schedulerUtil.scheduleMarketHoursJob(
-    'marketIndex',
-    schedulerUtil.constructor.CRON_EXPRESSIONS.EVERY_2_HOURS_MARKET,
-    () => marketIndexJob.execute()
-  );
+  // DISABLED: Missing models - Market indices update every 2 hours (market hours only)
+  // schedulerUtil.scheduleMarketHoursJob(
+  //   'marketIndex',
+  //   schedulerUtil.constructor.CRON_EXPRESSIONS.EVERY_2_HOURS_MARKET,
+  //   () => marketIndexJob.execute()
+  // );
 
   // Reminder check every 5 minutes
   schedulerUtil.scheduleJob(
