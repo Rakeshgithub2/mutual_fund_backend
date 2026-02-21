@@ -19,7 +19,7 @@ const masterCronScheduler = require('../cron/scheduler'); // Master cron schedul
 // Import jobs
 // DISABLED: Missing models - const dailyNavJob = require('./jobs/dailyNav.job');
 // DISABLED: Missing models - const marketIndexJob = require('./jobs/marketIndex.job');
-const reminderJob = require('./jobs/reminder.job');
+// DISABLED: Missing Reminder.model - const reminderJob = require('./jobs/reminder.job');
 
 // Import middleware
 const AuthMiddleware = require('../dist/src/middleware/auth.middleware');
@@ -213,12 +213,12 @@ function setupScheduler() {
   //   () => marketIndexJob.execute()
   // );
 
-  // Reminder check every 5 minutes
-  schedulerUtil.scheduleJob(
-    'reminders',
-    schedulerUtil.constructor.CRON_EXPRESSIONS.EVERY_5_MINUTES,
-    () => reminderJob.execute()
-  );
+  // DISABLED: Missing Reminder.model - Reminder check every 5 minutes
+  // schedulerUtil.scheduleJob(
+  //   'reminders',
+  //   schedulerUtil.constructor.CRON_EXPRESSIONS.EVERY_5_MINUTES,
+  //   () => reminderJob.execute()
+  // );
 
   console.log('\n✅ All cron jobs scheduled successfully\n');
 

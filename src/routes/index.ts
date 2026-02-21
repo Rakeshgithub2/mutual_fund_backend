@@ -23,6 +23,10 @@ import v2Routes from './v2.routes';
 import searchRoutes from './search.routes';
 import holdingsRoutes from './holdings.routes';
 
+// Import JavaScript routes (Goal and Reminder)
+const goalRoutes = require('./goal.routes');
+const reminderRoutes = require('./reminder.routes');
+
 const router = Router();
 
 // Core routes
@@ -39,6 +43,10 @@ router.use('/watchlist', watchlistRoutes);
 router.use('/portfolio', portfolioRoutes);
 router.use('/investments', investmentRoutes);
 router.use('/kyc', kycRoutes);
+
+// Goal & Reminder routes
+router.use('/goals', goalRoutes);
+router.use('/reminders', reminderRoutes);
 
 // Market Data routes
 router.use('/market-indices', marketIndicesRoutes);
