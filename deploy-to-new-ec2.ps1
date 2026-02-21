@@ -151,4 +151,3 @@ try {
 }
 
 Write-Host "Deployment complete!" -ForegroundColor Green
-Write-Host ""
