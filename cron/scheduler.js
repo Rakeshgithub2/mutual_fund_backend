@@ -22,8 +22,8 @@ const { updateFundManagers } = require('../jobs/update-managers.job');
 // DISABLED: Missing models - const { updateNews } = require('../jobs/update-news.job');
 const autoFundExpansionJob = require('../jobs/auto-fund-expansion.job');
 
-// Production-grade market indices worker (with Redis lock + market hours check)
-const marketIndicesWorker = require('../workers/market-indices.worker');
+// DISABLED: Missing models - Production-grade market indices worker (with Redis lock + market hours check)
+// DISABLED: Missing models - const marketIndicesWorker = require('../workers/market-indices.worker');
 
 class CronScheduler {
   constructor() {
@@ -101,24 +101,24 @@ class CronScheduler {
     );
     console.log('✅ Scheduled: Auto fund expansion daily at 3 AM IST');
 
-    // Market Indices: Every 5 minutes (PRODUCTION - with Redis lock + market hours)
-    // Uses: Redis distributed lock, market hours check, MongoDB history, Redis cache
-    this.tasks.push(
-      cron.schedule(
-        '*/5 * * * *',
-        async () => {
-          console.log('⏰ Running market indices worker (production)...');
-          await marketIndicesWorker.execute();
-        },
-        {
-          scheduled: true,
-          timezone: 'Asia/Kolkata',
-        }
-      )
-    );
-    console.log(
-      '✅ Scheduled: Market indices every 5 minutes (production worker)'
-    );
+    // DISABLED: Missing models - Market Indices: Every 5 minutes (PRODUCTION - with Redis lock + market hours)
+    // // Uses: Redis distributed lock, market hours check, MongoDB history, Redis cache
+    // this.tasks.push(
+    //   cron.schedule(
+    //     '*/5 * * * *',
+    //     async () => {
+    //       console.log('⏰ Running market indices worker (production)...');
+    //       await marketIndicesWorker.execute();
+    //     },
+    //     {
+    //       scheduled: true,
+    //       timezone: 'Asia/Kolkata',
+    //     }
+    //   )
+    // );
+    // console.log(
+    //   '✅ Scheduled: Market indices every 5 minutes (production worker)'
+    // );
 
     // Monthly Updates: 1st of every month at 2 AM
     this.tasks.push(
