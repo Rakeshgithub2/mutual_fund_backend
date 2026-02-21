@@ -18,8 +18,8 @@ const { updateAllNAV } = require('../jobs/update-nav.job');
 const { updateDailyReturns } = require('../jobs/update-returns.job');
 const { updateHoldings } = require('../jobs/update-holdings.job');
 const { updateFundManagers } = require('../jobs/update-managers.job');
-const { updateMarketIndices } = require('../jobs/update-indices.job');
-const { updateNews } = require('../jobs/update-news.job');
+// DISABLED: Missing models - const { updateMarketIndices } = require('../jobs/update-indices.job');
+// DISABLED: Missing models - const { updateNews } = require('../jobs/update-news.job');
 const autoFundExpansionJob = require('../jobs/auto-fund-expansion.job');
 
 // Production-grade market indices worker (with Redis lock + market hours check)
@@ -68,21 +68,22 @@ class CronScheduler {
     );
     console.log('✅ Scheduled: Daily returns at 6 PM IST');
 
-    // News Update: Every day at 6 AM IST
-    this.tasks.push(
-      cron.schedule(
-        '0 6 * * *',
-        async () => {
-          console.log('⏰ Running daily news update...');
-          await updateNews();
-        },
-        {
-          scheduled: true,
-          timezone: 'Asia/Kolkata',
-        }
-      )
-    );
-    console.log('✅ Scheduled: News update daily at 6 AM IST');
+    // DISABLED: News Update (missing MarketNews model)
+    // // News Update: Every day at 6 AM IST
+    // this.tasks.push(
+    //   cron.schedule(
+    //     '0 6 * * *',
+    //     async () => {
+    //       console.log('⏰ Running daily news update...');
+    //       await updateNews();
+    //     },
+    //     {
+    //       scheduled: true,
+    //       timezone: 'Asia/Kolkata',
+    //     }
+    //   )
+    // );
+    // console.log('✅ Scheduled: News update daily at 6 AM IST');
 
     // Auto Fund Expansion: Every day at 3 AM IST
     this.tasks.push(
