@@ -3,7 +3,7 @@
  * Checks and sends reminders every 5 minutes
  */
 
-const Reminder = require('../../dist/src/models/Reminder.model');
+const Reminder = require('../models/Reminder.model');
 const DateUtil = require('../utils/date.util');
 
 class ReminderJob {
